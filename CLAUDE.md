@@ -120,3 +120,9 @@ const useCloudStorage = window.storage && typeof window.storage.get === 'functio
 ## コミュニケーション
 
 - ユーザーへの確認・質問・コマンド実行前の確認はすべて**日本語**で行う
+
+## 修正依頼を受けたときのワークフロー
+
+1. 原因を見つけて修正する
+2. 修正内容を CLAUDE.md に反映させる
+3. GitHub にプッシュする（`git add` → `git commit` → `git push origin master:main`）
