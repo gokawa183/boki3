@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>簿記3級 学習アプリ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="header">
+  <div><div class="h-title">日商簿記３級　学習帳</div><div class="h-sub">BOKI LEVEL 3 — STUDY APP</div></div>
+  <div class="score-box">正解率<strong id="scoreDisp">－</strong></div>
+</div>
+<!-- ウェルカム画面 -->
+<div id="welcome-screen">
+  <div class="wl-hero">
+    <div class="wl-title">日商簿記３級<br>学習アプリ</div>
+    <div class="wl-sub">BOKI LEVEL 3 — STUDY APP</div>
+  </div>
+  <div class="wl-question">あなたはどちらですか？</div>
+  <div class="wl-cards">
+    <button class="wl-card" onclick="startApp('study')">
+      <div class="wl-card-icon">🌱</div>
+      <div class="wl-card-title">はじめて<br>簿記を学ぶ</div>
+      <div class="wl-card-desc">「そもそも簿記って何？」から<br>やさしく解説します</div>
+      <div class="wl-card-arrow">基礎学習へ →</div>
+    </button>
+    <button class="wl-card" onclick="startApp('quiz')">
+      <div class="wl-card-icon">📝</div>
+      <div class="wl-card-title">ある程度<br>勉強したことがある</div>
+      <div class="wl-card-desc">120問からランダム10問出題。<br>腕試しに挑戦！</div>
+      <div class="wl-card-arrow">練習問題へ →</div>
+    </button>
+  </div>
+  <button class="wl-skip" onclick="startApp('quiz')">スキップしてトップへ</button>
+</div>
+
+<!-- タブ・コンテンツエリア（初期非表示） -->
+<div id="app-area" class="hidden">
+<div class="tabs">
+  <button class="tab active" onclick="showTab('quiz',this)">📝 練習問題</button>
+  <button class="tab" onclick="showTab('stats',this)">📊 成績</button>
+  <button class="tab" onclick="showTab('study',this)">📖 基礎学習</button>
+  <button class="tab" onclick="showTab('exam',this)">🎯 試験対策</button>
+  <button class="tab" onclick="showTab('q2study',this)">📒 第2問対策</button>
+  <button class="tab" onclick="showTab('q3study',this)">📊 第3問対策</button>
+  <button class="tab" onclick="showTab('kessan',this)">📅 決算対策</button>
+  <button class="tab" onclick="showTab('mock',this)">🏆 模擬試験</button>
+  <button class="tab" onclick="showTab('reference',this)">📚 用語集</button>
+  <button class="tab" onclick="showTab('journal',this)">📒 仕訳辞典</button>
+</div>
+
+<!-- QUIZ -->
+<div id="tab-quiz" class="main">
+  <div class="prog-area">
+    <div class="prog-lbl">PROGRESS — ランダム10問出題（問題プール: <span id="poolSize">0</span>問）</div>
+    <div class="prog-wrap"><div class="prog-bar" id="pBar" style="width:0%"></div></div>
+    <div class="prog-stats">
+      <div>問題 <strong id="qN">1</strong>/<strong id="qT">10</strong></div>
+      <div>正解 <strong id="cCnt" style="color:var(--cg)">0</strong></div>
+      <div>不正解 <strong id="wCnt" style="color:var(--wg)">0</strong></div>
+    </div>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div id="banner" class="banner"></div>
+  <div id="quizArea"></div>
+  <div id="resultScreen" class="result hidden"></div>
+</div>
+
+<!-- STATS -->
+<div id="tab-stats" class="main hidden">
+  <div class="stats-header">
+    <div class="sec-hd" style="margin-bottom:0"><span class="badge">STATS</span><span class="sec-ttl">ジャンル別成績</span></div>
+    <button class="reset-btn" onclick="resetStats()">リセット</button>
+  </div>
+  <div id="statsContent"></div>
+</div>
+
+<!-- STUDY -->
+<div id="tab-study" class="main hidden">
+  <div class="sec-hd"><span class="badge">基礎</span><span class="sec-ttl">基礎学習</span></div>
+  <div id="studyList"></div>
+</div>
+
+<!-- EXAM -->
+<div id="tab-exam" class="main hidden">
+  <div class="sec-hd"><span class="badge">試験</span><span class="sec-ttl">試験対策ガイド</span></div>
+
+  <!-- ネット試験概要 -->
+  <div class="exam-card">
+    <div class="exam-card-hd">🖥️ ネット試験（CBT）の概要</div>
+    <div class="exam-card-body">
+      <div class="exam-row"><span class="exam-lbl">試験時間</span><span class="exam-val">60分</span></div>
+      <div class="exam-row"><span class="exam-lbl">合格基準</span><span class="exam-val">70点以上（100点満点）</span></div>
+      <div class="exam-row"><span class="exam-lbl">合格率</span><span class="exam-val">約38〜41%（ネット試験は統一試験より高め）</span></div>
+      <div class="exam-row"><span class="exam-lbl">受験方法</span><span class="exam-val">全国のテストセンターでほぼ毎日受験可能</span></div>
+      <div class="exam-row"><span class="exam-lbl">合否発表</span><span class="exam-val">試験終了後その場で即時発表</span></div>
+      <div class="exam-row"><span class="exam-lbl">再受験</span><span class="exam-val">不合格後も翌日以降いつでも再受験可能</span></div>
+      <div class="exam-note">💡 ネット試験は統一試験（紙）より基本的な問題が多く合格しやすい傾向があります。</div>
+    </div>
+  </div>
+
+  <!-- 大問別配点・出題傾向 -->
+  <div class="exam-card">
+    <div class="exam-card-hd">📊 大問別・配点と出題傾向</div>
+    <div class="exam-card-body">
+      <div class="exam-section-title">第1問（45点）— 最重要！</div>
+      <p class="exam-p">商業簿記の仕訳問題が<strong>15問</strong>出題されます（1問3点）。<br>全問正解で45点と配点が最も大きく、ここで確実に点を取ることが合格への近道です。<br>試験範囲全体から幅広く出題されるため、苦手分野を作らないことが重要です。</p>
+      <div class="exam-tip">⏱️ 目標解答時間：15〜20分。1問あたり約1分で解けるよう練習しましょう。</div>
+
+      <div class="exam-section-title" style="margin-top:14px">第2問（20点）— 勘定記入が頻出</div>
+      <p class="exam-p">2つの小問形式。以下が頻出です：<br>・<strong>総勘定元帳への記入</strong>（よく出る！）<br>・<strong>補助簿の問題</strong>（商品有高帳・固定資産台帳など）<br>・仕訳や伝票の問題が出ることもある</p>
+      <div class="exam-tip">📝 理論問題はほぼ出題されなくなりました（2024年度以降）。</div>
+
+      <div class="exam-section-title" style="margin-top:14px">第3問（35点）— 精算表・試算表が中心</div>
+      <p class="exam-p">学習範囲全体の総合問題。以下が頻出です：<br>・<strong>決算整理後残高試算表の作成</strong>（最頻出！）<br>・<strong>精算表の作成</strong><br>・損益計算書・貸借対照表の作成<br>1つのミスで複数箇所に影響するため、ケアレスミスに注意。</p>
+      <div class="exam-tip">⚠️ 期中の試算表は出題されなくなりました。「決算整理後」の試算表に集中しましょう。</div>
+    </div>
+  </div>
+
+  <!-- 頻出仕訳トップ10 -->
+  <div class="exam-card">
+    <div class="exam-card-hd">🔥 第1問 頻出仕訳トップ10</div>
+    <div class="exam-card-body">
+      <p class="exam-p" style="margin-bottom:10px">以下のパターンは必ず仕訳が書けるようにしておきましょう。</p>
+      <div class="freq-list">
+        <div class="freq-item"><span class="freq-rank">1</span><div><strong>現金・預金の入出金</strong><br><span class="freq-sub">現金→普通預金→当座預金の振替</span></div></div>
+        <div class="freq-item"><span class="freq-rank">2</span><div><strong>掛け取引（仕入・売上）</strong><br><span class="freq-sub">売掛金・買掛金の発生と回収</span></div></div>
+        <div class="freq-item"><span class="freq-rank">3</span><div><strong>給料の支払い（源泉徴収あり）</strong><br><span class="freq-sub">給料・現金・預り金の3科目仕訳</span></div></div>
+        <div class="freq-item"><span class="freq-rank">4</span><div><strong>固定資産の購入・売却</strong><br><span class="freq-sub">備品・減価償却累計額・売却損益</span></div></div>
+        <div class="freq-item"><span class="freq-rank">5</span><div><strong>小切手・手形の仕訳</strong><br><span class="freq-sub">受取手形・支払手形・当座預金</span></div></div>
+        <div class="freq-item"><span class="freq-rank">6</span><div><strong>経過勘定（前払・未払・前受・未収）</strong><br><span class="freq-sub">決算整理で頻出</span></div></div>
+        <div class="freq-item"><span class="freq-rank">7</span><div><strong>借入・返済（利息含む）</strong><br><span class="freq-sub">借入金・支払利息の複合仕訳</span></div></div>
+        <div class="freq-item"><span class="freq-rank">8</span><div><strong>貸倒れ・貸倒引当金</strong><br><span class="freq-sub">貸倒引当金繰入・貸倒損失</span></div></div>
+        <div class="freq-item"><span class="freq-rank">9</span><div><strong>仮払金・仮受金の精算</strong><br><span class="freq-sub">仮払金→旅費交通費へ振替</span></div></div>
+        <div class="freq-item"><span class="freq-rank">10</span><div><strong>税金・租税公課</strong><br><span class="freq-sub">固定資産税・印紙税など</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 合格戦略 -->
+  <div class="exam-card">
+    <div class="exam-card-hd">🗺️ 合格のための戦略</div>
+    <div class="exam-card-body">
+      <div class="exam-section-title">点数の目標配分</div>
+      <div class="score-goal">
+        <div class="sg-item"><div class="sg-q">第1問</div><div class="sg-score">36点以上<span>/45点</span></div><div class="sg-bar"><div class="sg-fill" style="width:80%"></div></div><div class="sg-note">80%目標。ここが最重要</div></div>
+        <div class="sg-item"><div class="sg-q">第2問</div><div class="sg-score">12点以上<span>/20点</span></div><div class="sg-bar"><div class="sg-fill" style="width:60%"></div></div><div class="sg-note">60%目標。苦手なら後回し可</div></div>
+        <div class="sg-item"><div class="sg-q">第3問</div><div class="sg-score">22点以上<span>/35点</span></div><div class="sg-bar"><div class="sg-fill" style="width:63%"></div></div><div class="sg-note">63%目標。決算整理を完璧に</div></div>
+      </div>
+      <div class="exam-note" style="margin-top:10px">合計70点以上で合格。第1問と第3問を中心に学習しましょう。</div>
+
+      <div class="exam-section-title" style="margin-top:16px">学習スケジュールの目安（約100時間）</div>
+      <div class="study-plan">
+        <div class="sp-item"><span class="sp-phase">Phase 1</span><span class="sp-content">仕訳の基本マスター（仕訳パターン50問）</span><span class="sp-time">〜30時間</span></div>
+        <div class="sp-item"><span class="sp-phase">Phase 2</span><span class="sp-content">各分野の深掘り（固定資産・手形・決算整理）</span><span class="sp-time">〜50時間</span></div>
+        <div class="sp-item"><span class="sp-phase">Phase 3</span><span class="sp-content">試算表・精算表の演習（第3問対策）</span><span class="sp-time">〜70時間</span></div>
+        <div class="sp-item"><span class="sp-phase">Phase 4</span><span class="sp-content">模擬試験・時間内完答の練習</span><span class="sp-time">〜100時間</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 当日の注意点 -->
+  <div class="exam-card">
+    <div class="exam-card-hd">📅 試験当日のポイント</div>
+    <div class="exam-card-body">
+      <div class="exam-check-list">
+        <div class="ck-item"><span class="ck-ico">✅</span><span>電卓は会場貸し出し or 持参可（機種確認を）</span></div>
+        <div class="ck-item"><span class="ck-ico">✅</span><span>試験問題・計算用紙はすべて回収される（持ち帰り不可）</span></div>
+        <div class="ck-item"><span class="ck-ico">✅</span><span>第1問から順に解かなくてよい。得意な問題から解くのもOK</span></div>
+        <div class="ck-item"><span class="ck-ico">✅</span><span>第3問は「決算整理後残高試算表」が最頻出。焦らず落ち着いて</span></div>
+        <div class="ck-item"><span class="ck-ico">✅</span><span>合否はその場で画面に表示される</span></div>
+        <div class="ck-item"><span class="ck-ico">⚠️</span><span>2027年4月以降は出題区分が改訂予定。受験日を確認しよう</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REFERENCE -->
+<div id="tab-mock" class="main hidden">
+  <!-- 開始画面 -->
+  <div id="mock-start">
+    <div class="mock-hero">
+      <div class="mock-hero-title">🏆 ネット試験　模擬試験</div>
+      <div class="mock-hero-sub">本番と同じ3問構成・60分・100点満点</div>
+    </div>
+    <div class="mock-info-grid">
+      <div class="mock-info-item"><span class="mock-info-num">第1問</span><span class="mock-info-detail">仕訳15問 ／ 45点</span></div>
+      <div class="mock-info-item"><span class="mock-info-num">第2問</span><span class="mock-info-detail">勘定記入2問 ／ 20点</span></div>
+      <div class="mock-info-item"><span class="mock-info-num">第3問</span><span class="mock-info-detail">残高試算表 ／ 35点</span></div>
+    </div>
+    <div class="mock-rules">
+      <div class="mock-rule-item">⏱️ 試験時間は60分です（タイマー付き）</div>
+      <div class="mock-rule-item">📋 問題はランダムに出題されます</div>
+      <div class="mock-rule-item">✅ 70点以上で合格です</div>
+      <div class="mock-rule-item">⚠️ 途中でタブを切り替えても時間は止まりません</div>
+    </div>
+    <button class="mock-start-btn" onclick="startMock()">試験開始 →</button>
+  </div>
+
+  <!-- 試験中 -->
+  <div id="mock-exam" class="hidden">
+    <!-- タイマー・ヘッダー -->
+    <div class="mock-timer-bar">
+      <div class="mock-progress-label" id="mockProgressLabel">第1問 1/15</div>
+      <div class="mock-timer" id="mockTimer">60:00</div>
+    </div>
+
+    <!-- 第1問エリア -->
+    <div id="mock-q1-area"></div>
+    <!-- 第2問エリア -->
+    <div id="mock-q2-area" class="hidden"></div>
+    <!-- 第3問エリア -->
+    <div id="mock-q3-area" class="hidden"></div>
+
+    <!-- ナビゲーション -->
+    <div class="mock-nav">
+      <button class="mock-nav-btn secondary" id="mockPrevBtn" onclick="mockNav(-1)" style="display:none">← 前へ</button>
+      <button class="mock-nav-btn" id="mockNextBtn" onclick="mockNav(1)">次へ →</button>
+      <button class="mock-nav-btn danger hidden" id="mockSubmitBtn" onclick="submitMock()">採点する 📊</button>
+    </div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="mock-result" class="hidden"></div>
+</div>
+
+<!-- Q2 STUDY -->
+<div id="tab-q2study" class="main hidden">
+  <div class="sec-hd"><span class="badge">第2問</span><span class="sec-ttl">第2問対策 — 勘定記入・補助簿</span></div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">📖 総勘定元帳とは？</div>
+    <div class="exam-card-body">
+      <p class="exam-p">総勘定元帳とは、勘定科目ごとにすべての取引を記録した帳簿です。仕訳帳に書いた仕訳を科目ごとに「転記」したものです。</p>
+      <div class="exam-note">💡 第2問では「（　）に入る金額・科目名を答えなさい」という形式がほとんどです。</div>
+      <div class="exam-section-title" style="margin-top:12px">元帳の読み方</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.79rem;margin-top:6px">
+        <thead><tr style="background:var(--ink);color:var(--paper)"><th style="padding:6px;text-align:center">日付</th><th style="padding:6px">摘要</th><th style="padding:6px;text-align:right">借方</th><th style="padding:6px;text-align:right">貸方</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px;text-align:center">1日</td><td style="padding:6px">売上</td><td style="padding:6px;text-align:right">200,000</td><td style="padding:6px"></td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px;text-align:center">5日</td><td style="padding:6px">現金</td><td style="padding:6px"></td><td style="padding:6px;text-align:right">150,000</td></tr>
+          <tr><td style="padding:6px;text-align:center">末日</td><td style="padding:6px">次月繰越</td><td style="padding:6px"></td><td style="padding:6px;text-align:right;color:var(--accent2);font-weight:700">50,000</td></tr>
+        </tbody>
+      </table>
+      <p class="exam-p" style="margin-top:8px">→ 借方合計200,000 − 貸方150,000 ＝ <strong>残高50,000円</strong>（次月繰越）</p>
+      <div class="exam-tip">📝 残高 ＝ 借方合計 − 貸方合計（資産・費用は借方残高、負債・収益は貸方残高）</div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">✏️ 練習①：売掛金元帳の記入</div>
+    <div class="exam-card-body">
+      <p class="exam-p">次の取引をもとに、売掛金元帳の空欄（次月繰越）を埋めなさい。</p>
+      <div class="exam-note" style="white-space:pre-line">① 商品300,000円を掛けで販売した
+② 売掛金200,000円を現金で回収した
+③ 売掛金のうち30,000円が返品された</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.79rem;margin-top:10px">
+        <thead><tr style="background:var(--ink);color:var(--paper)"><th style="padding:6px;text-align:center">日付</th><th style="padding:6px">摘要</th><th style="padding:6px;text-align:right">借方</th><th style="padding:6px;text-align:right">貸方</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px;text-align:center">①</td><td style="padding:6px">売上</td><td style="padding:6px;text-align:right">300,000</td><td style="padding:6px"></td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px;text-align:center">②</td><td style="padding:6px">現金</td><td style="padding:6px"></td><td style="padding:6px;text-align:right">200,000</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px;text-align:center">③</td><td style="padding:6px">売上（返品）</td><td style="padding:6px"></td><td style="padding:6px;text-align:right">30,000</td></tr>
+          <tr><td style="padding:6px;text-align:center">末</td><td style="padding:6px">次月繰越</td><td style="padding:6px"></td><td style="padding:6px;text-align:right"><input type="number" id="q2e1ans" style="width:90px;border:1.5px solid var(--accent2);border-radius:3px;padding:3px 5px;font-size:.79rem;text-align:right" placeholder="?"></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="mock-start-btn" style="width:auto;padding:9px 20px;font-size:.79rem" onclick="checkQ2E1()">答え合わせ</button>
+        <button class="reset-btn" onclick="resetQ2E1()">リセット</button>
+      </div>
+      <div id="q2e1-result" style="margin-top:8px;display:none;padding:9px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div class="exam-note" style="margin-top:8px;display:none" id="q2e1-exp">
+        借方合計300,000 − 貸方（200,000＋30,000）＝ <strong>残高70,000円</strong><br>
+        売掛金はまだ70,000円もらっていない状態です。
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">📖 補助簿の種類</div>
+    <div class="exam-card-body">
+      <p class="exam-p">補助簿は特定の取引を詳しく記録する帳簿です。第2問でよく出るものは以下の通りです。</p>
+      <div style="display:grid;gap:8px;margin-top:8px">
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">商品有高帳</strong><br>商品の仕入・売上・在庫を数量と単価で管理する帳簿。先入先出法・移動平均法などで計算。</div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">固定資産台帳</strong><br>備品・車両などの取得日・取得原価・減価償却の記録を管理。帳簿価額 ＝ 取得原価 − 減価償却累計額</div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">売掛金元帳・買掛金元帳</strong><br>得意先・仕入先ごとに売掛金・買掛金の残高を管理する帳簿。</div>
+      </div>
+      <div class="exam-tip" style="margin-top:10px">⏱️ 第2問の目標解答時間は15分。落ち着いて計算しましょう。</div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">✏️ 練習②：固定資産台帳の読み取り</div>
+    <div class="exam-card-body">
+      <p class="exam-p">備品について以下の情報があります。帳簿価額を求めなさい。</p>
+      <div class="exam-note" style="white-space:pre-line">取得原価：500,000円
+耐用年数：5年・残存価額0円・定額法
+取得日：期首（×1年4月1日）
+現在：×3年3月31日（2年経過後）</div>
+      <div style="margin-top:10px">
+        <label style="font-size:.79rem">帳簿価額：<input type="number" id="q2e2ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="mock-start-btn" style="width:auto;padding:9px 20px;font-size:.79rem" onclick="checkQ2E2()">答え合わせ</button>
+        <button class="reset-btn" onclick="document.getElementById('q2e2ans').value='';document.getElementById('q2e2-result').style.display='none';document.getElementById('q2e2-exp').style.display='none'">リセット</button>
+      </div>
+      <div id="q2e2-result" style="margin-top:8px;display:none;padding:9px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div class="exam-note" style="margin-top:8px;display:none" id="q2e2-exp">
+        年間償却費 ＝ 500,000 ÷ 5年 ＝ 100,000円<br>
+        2年分の累計 ＝ 100,000 × 2 ＝ 200,000円<br>
+        帳簿価額 ＝ 500,000 − 200,000 ＝ <strong>300,000円</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Q3 STUDY -->
+<div id="tab-q3study" class="main hidden">
+  <div class="sec-hd"><span class="badge">第3問</span><span class="sec-ttl">第3問対策 — 試算表・精算表</span></div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">📖 決算整理後残高試算表とは？</div>
+    <div class="exam-card-body">
+      <p class="exam-p">第3問で最も頻出なのが「決算整理後残高試算表」です。<br>決算整理仕訳を反映した後の、各勘定科目の残高を一覧にした表です。</p>
+      <div class="exam-section-title" style="margin-top:12px">作成の手順</div>
+      <div style="display:grid;gap:7px;margin-top:8px">
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;align-items:center;gap:10px"><span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step 1</span><span>決算整理前の残高試算表を確認する</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;align-items:center;gap:10px"><span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step 2</span><span>決算整理事項の仕訳を書く（減価償却・経過勘定・売上原価など）</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;align-items:center;gap:10px"><span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step 3</span><span>各科目の残高に決算整理の増減を加減算する</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;align-items:center;gap:10px"><span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step 4</span><span>借方合計 ＝ 貸方合計になれば完成</span></div>
+      </div>
+      <div class="exam-tip" style="margin-top:10px">⚠️ 決算整理で新しく登場する科目（前払費用・未払費用など）は元の残高がゼロなので注意！</div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">🔥 よく出る決算整理5パターン</div>
+    <div class="exam-card-body">
+      <div style="display:grid;gap:9px">
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">① 売上原価の算定</strong><br>（借）仕入 ／（貸）繰越商品 ← 期首商品を仕入へ<br>（借）繰越商品 ／（貸）仕入 ← 期末商品を繰越商品へ<br><span style="color:#888;font-size:.73rem">仕入の残高が売上原価になる。期首50,000＋仕入400,000−期末60,000＝390,000</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">② 減価償却費の計上</strong><br>（借）減価償却費 ／（貸）減価償却累計額<br><span style="color:#888;font-size:.73rem">取得原価÷耐用年数で計算（残存価額0円の場合）</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">③ 経過勘定の整理</strong><br>前払費用：費用を減らして資産に計上<br>未払費用：費用を増やして負債に計上<br><span style="color:#888;font-size:.73rem">月割り計算に注意！年額÷12×月数</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">④ 貸倒引当金の設定</strong><br>（借）貸倒引当金繰入 ／（貸）貸倒引当金<br><span style="color:#888;font-size:.73rem">売掛金残高×設定率。既存の引当金残高との差額に注意</span></div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem"><strong style="color:var(--accent2)">⑤ 消耗品の未使用分の振替</strong><br>（借）消耗品 ／（貸）消耗品費<br><span style="color:#888;font-size:.73rem">期末未使用分を費用から資産に振り替える</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">✏️ 練習：決算整理後の金額を求める</div>
+    <div class="exam-card-body">
+      <p class="exam-p">次の決算整理事項をもとに各問いに答えなさい。</p>
+      <div class="exam-note" style="white-space:pre-line">【決算整理前残高】
+仕入：400,000円　繰越商品：50,000円
+
+【決算整理事項】
+期末商品棚卸高：60,000円</div>
+      <div style="margin-top:12px;display:grid;gap:10px">
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px">
+          <div style="font-size:.8rem;font-weight:700;margin-bottom:6px">Q1. 決算整理後の「仕入（売上原価）」はいくらか？</div>
+          <label style="font-size:.79rem">答え：<input type="number" id="q3e1ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+          <div id="q3e1-result" style="margin-top:6px;font-size:.78rem;display:none"></div>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:10px 12px">
+          <div style="font-size:.8rem;font-weight:700;margin-bottom:6px">Q2. 決算整理後の「繰越商品」はいくらか？</div>
+          <label style="font-size:.79rem">答え：<input type="number" id="q3e2ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+          <div id="q3e2-result" style="margin-top:6px;font-size:.78rem;display:none"></div>
+        </div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="mock-start-btn" style="width:auto;padding:9px 20px;font-size:.79rem" onclick="checkQ3E()">答え合わせ</button>
+        <button class="reset-btn" onclick="resetQ3E()">リセット</button>
+      </div>
+      <div class="exam-note" style="margin-top:8px;display:none" id="q3e-exp">
+        <strong>Q1 解説</strong>：売上原価 ＝ 期首50,000 ＋ 仕入400,000 − 期末60,000 ＝ <strong>390,000円</strong><br>
+        <strong>Q2 解説</strong>：繰越商品 ＝ 期末商品棚卸高 ＝ <strong>60,000円</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">📖 精算表の読み方</div>
+    <div class="exam-card-body">
+      <p class="exam-p">精算表は左から右へ4つの欄で構成されます。</p>
+      <div style="overflow-x:auto;margin-top:8px">
+        <table style="border-collapse:collapse;font-size:.73rem;min-width:360px;width:100%">
+          <thead>
+            <tr style="background:var(--ink);color:var(--paper);text-align:center">
+              <th style="padding:5px">勘定科目</th>
+              <th style="padding:5px" colspan="2">残高試算表</th>
+              <th style="padding:5px" colspan="2">決算整理</th>
+              <th style="padding:5px" colspan="2">損益計算書</th>
+              <th style="padding:5px" colspan="2">貸借対照表</th>
+            </tr>
+            <tr style="background:#333;color:#aaa;text-align:center;font-size:.65rem">
+              <th style="padding:3px"></th>
+              <th style="padding:3px">借方</th><th style="padding:3px">貸方</th>
+              <th style="padding:3px">借方</th><th style="padding:3px">貸方</th>
+              <th style="padding:3px">借方</th><th style="padding:3px">貸方</th>
+              <th style="padding:3px">借方</th><th style="padding:3px">貸方</th>
+            </tr>
+          </thead>
+          <tbody style="text-align:right">
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px;text-align:left">現金</td><td style="padding:4px">80,000</td><td></td><td></td><td></td><td></td><td></td><td style="color:var(--accent2);font-weight:700">80,000</td><td></td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px;text-align:left">売上</td><td></td><td style="padding:4px">500,000</td><td></td><td></td><td></td><td style="color:var(--accent2);font-weight:700">500,000</td><td></td><td></td></tr>
+            <tr><td style="padding:4px;text-align:left">減価償却費</td><td></td><td></td><td style="padding:4px">60,000</td><td></td><td style="color:var(--accent2);font-weight:700">60,000</td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="exam-tip" style="margin-top:10px">📌 資産・負債・純資産 → 貸借対照表欄へ<br>収益・費用 → 損益計算書欄へ</div>
+    </div>
+  </div>
+</div>
+
+<!-- KESSAN -->
+<div id="tab-kessan" class="main hidden">
+  <div class="sec-hd"><span class="badge">決算</span><span class="sec-ttl">決算対策 — 完全ガイド</span></div>
+
+  <!-- 1. 決算とは -->
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">① 決算とは何か・全体の流れ <span class="tog">▼</span></div>
+    <div class="ref-bd">
+      <p class="exam-p">決算とは<strong>1年間の帳簿を締めくくり、財務諸表を作る作業</strong>です。<br>「今年いくら儲かったか」「今どれだけ財産があるか」を明らかにします。</p>
+      <div class="exam-section-title" style="margin-top:12px">決算の流れ（全体像）</div>
+      <div style="display:grid;gap:6px;margin-top:8px">
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;gap:10px;align-items:center">
+          <span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step1</span>
+          <span><strong>残高試算表の作成</strong> — 期中の仕訳を集計して残高を確認</span>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;gap:10px;align-items:center">
+          <span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step2</span>
+          <span><strong>決算整理仕訳</strong> — 売上原価・減価償却・経過勘定などを修正</span>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;gap:10px;align-items:center">
+          <span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step3</span>
+          <span><strong>精算表の作成</strong> — Step1〜2を一枚の表にまとめる</span>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;gap:10px;align-items:center">
+          <span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step4</span>
+          <span><strong>損益振替・資本振替</strong> — 収益・費用を損益勘定に集めて純利益を確定</span>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem;display:flex;gap:10px;align-items:center">
+          <span style="background:var(--accent);color:#fff;border-radius:3px;padding:2px 8px;font-size:.7rem;font-weight:700;white-space:nowrap">Step5</span>
+          <span><strong>財務諸表の作成</strong> — 損益計算書・貸借対照表を完成させる</span>
+        </div>
+      </div>
+      <div class="exam-note" style="margin-top:10px">💡 試験では主に Step2（決算整理仕訳）と Step3（精算表・残高試算表）が出題されます。</div>
+    </div>
+  </div>
+
+  <!-- 2. 売上原価 -->
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">② 売上原価の計算（最重要！） <span class="tog">▼</span></div>
+    <div class="ref-bd">
+      <p class="exam-p">売上原価とは「売った商品を仕入れるのにかかった金額」のことです。<br>当期の仕入れだけでなく、<strong>期首の在庫を足して、期末の在庫を引く</strong>必要があります。</p>
+      <div class="exam-note" style="margin-top:8px">
+        <strong>売上原価 ＝ 期首商品 ＋ 当期仕入 − 期末商品</strong>
+      </div>
+      <div class="exam-section-title" style="margin-top:12px">決算整理仕訳（2本セット）</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;margin-top:8px;line-height:2">
+        <strong>① 期首商品を仕入に振替</strong><br>
+        （借）仕入 <span style="color:var(--accent2)">期首商品額</span> ／（貸）繰越商品 <span style="color:var(--accent2)">期首商品額</span><br>
+        <strong>② 期末商品を繰越商品に振替</strong><br>
+        （借）繰越商品 <span style="color:var(--accent2)">期末商品額</span> ／（貸）仕入 <span style="color:var(--accent2)">期末商品額</span>
+      </div>
+      <div class="exam-tip" style="margin-top:8px">📝 この2本の仕訳後、仕入勘定の残高が売上原価になります。</div>
+      <div class="exam-section-title" style="margin-top:12px">具体例で確認</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;margin-top:8px;line-height:2">
+        期首商品：50,000円　当期仕入：400,000円　期末商品：60,000円<br><br>
+        ①（借）仕入 50,000 ／（貸）繰越商品 50,000<br>
+        ②（借）繰越商品 60,000 ／（貸）仕入 60,000<br><br>
+        仕入残高：400,000 + 50,000 − 60,000 ＝ <strong style="color:var(--accent2)">390,000円（売上原価）</strong><br>
+        繰越商品：60,000円（期末在庫として貸借対照表へ）
+      </div>
+      <!-- 練習 -->
+      <div class="exam-section-title" style="margin-top:14px">✏️ 練習問題</div>
+      <p class="exam-p" style="margin-top:6px">期首商品30,000円、当期仕入250,000円、期末商品40,000円のとき、売上原価はいくらか？</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <label style="font-size:.79rem">答え：<input type="number" id="k1ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+        <button class="mock-start-btn" style="width:auto;padding:8px 16px;font-size:.79rem" onclick="checkKessan(1,240000,'k1ans','k1r','k1exp')">答え合わせ</button>
+        <button class="reset-btn" onclick="resetKessan('k1ans','k1r','k1exp')">リセット</button>
+      </div>
+      <div id="k1r" style="display:none;margin-top:6px;padding:8px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div id="k1exp" class="exam-note" style="display:none;margin-top:6px">30,000 ＋ 250,000 − 40,000 ＝ <strong>240,000円</strong></div>
+    </div>
+  </div>
+
+  <!-- 3. 減価償却 -->
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">③ 減価償却費の計上 <span class="tog">▼</span></div>
+    <div class="ref-bd">
+      <p class="exam-p">建物・備品・車両などは使うほど価値が減っていきます。<br>その価値の減少を毎年少しずつ費用として記録することを<strong>減価償却</strong>といいます。</p>
+      <div class="exam-note" style="margin-top:8px">
+        <strong>年間償却費（定額法）＝ 取得原価 ÷ 耐用年数</strong>（残存価額0円の場合）
+      </div>
+      <div class="exam-section-title" style="margin-top:12px">決算整理仕訳（間接法）</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;margin-top:8px;line-height:2">
+        （借）減価償却費 XX,XXX ／（貸）減価償却累計額 XX,XXX
+      </div>
+      <div class="exam-tip">📝 間接法では固定資産の金額は変えず、「減価償却累計額」という評価勘定で差し引く。<br>帳簿価額 ＝ 取得原価 − 減価償却累計額</div>
+      <div class="exam-section-title" style="margin-top:12px">期中取得の場合は月割り計算</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;line-height:2">
+        取得原価600,000円・耐用年数5年・7月1日取得・決算3月31日<br>
+        年間：600,000 ÷ 5 ＝ 120,000円<br>
+        当期（9ヶ月分）：120,000 × 9÷12 ＝ <strong style="color:var(--accent2)">90,000円</strong>
+      </div>
+      <!-- 練習 -->
+      <div class="exam-section-title" style="margin-top:14px">✏️ 練習問題</div>
+      <p class="exam-p" style="margin-top:6px">備品360,000円（耐用年数6年・残存価額0円・定額法）を期首に取得した。当期の減価償却費はいくらか？</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <label style="font-size:.79rem">答え：<input type="number" id="k2ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+        <button class="mock-start-btn" style="width:auto;padding:8px 16px;font-size:.79rem" onclick="checkKessan(2,60000,'k2ans','k2r','k2exp')">答え合わせ</button>
+        <button class="reset-btn" onclick="resetKessan('k2ans','k2r','k2exp')">リセット</button>
+      </div>
+      <div id="k2r" style="display:none;margin-top:6px;padding:8px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div id="k2exp" class="exam-note" style="display:none;margin-top:6px">360,000 ÷ 6年 ＝ <strong>60,000円</strong></div>
+    </div>
+  </div>
+
+  <!-- 4. 経過勘定 -->
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">④ 経過勘定（前払・未払・前受・未収） <span class="tog">▼</span></div>
+    <div class="ref-bd">
+      <p class="exam-p">費用や収益は「発生した期間」に計上するのが原則です。<br>お金の受け渡しと期間がズレているときに使うのが<strong>経過勘定</strong>です。</p>
+      <div style="display:grid;gap:8px;margin-top:10px">
+        <div style="background:#e8f5e9;border-radius:5px;padding:10px 12px;font-size:.8rem;border-left:3px solid var(--cg)">
+          <strong>前払費用（資産）</strong> — 払ったが翌期の費用<br>
+          <span style="color:#888;font-size:.75rem">例：1年分の保険料を払ったが、翌期分がある</span><br>
+          仕訳：（借）前払費用 ／（貸）支払保険料
+        </div>
+        <div style="background:#fff3e0;border-radius:5px;padding:10px 12px;font-size:.8rem;border-left:3px solid #f39c12">
+          <strong>未払費用（負債）</strong> — 当期の費用だが未払い<br>
+          <span style="color:#888;font-size:.75rem">例：利息が発生しているが支払いは翌期</span><br>
+          仕訳：（借）支払利息 ／（貸）未払費用
+        </div>
+        <div style="background:#fff3e0;border-radius:5px;padding:10px 12px;font-size:.8rem;border-left:3px solid #f39c12">
+          <strong>前受収益（負債）</strong> — 受け取ったが翌期の収益<br>
+          <span style="color:#888;font-size:.75rem">例：1年分の家賃を受け取ったが翌期分がある</span><br>
+          仕訳：（借）受取家賃 ／（貸）前受収益
+        </div>
+        <div style="background:#e8f5e9;border-radius:5px;padding:10px 12px;font-size:.8rem;border-left:3px solid var(--cg)">
+          <strong>未収収益（資産）</strong> — 当期の収益だが未受取<br>
+          <span style="color:#888;font-size:.75rem">例：当期分の利息がまだ入金されていない</span><br>
+          仕訳：（借）未収収益 ／（貸）受取利息
+        </div>
+      </div>
+      <div class="exam-note" style="margin-top:10px">💡 迷ったら「当期分か翌期分か」を確認。翌期分の費用→資産（前払）、翌期分の収益→負債（前受）</div>
+      <div class="exam-section-title" style="margin-top:12px">月割り計算の例</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;line-height:2">
+        保険料24,000円を10月1日に1年分払った（決算3月31日）<br>
+        当期分（10月〜3月）：6ヶ月 → 24,000 × 6÷12 ＝ 12,000円<br>
+        翌期分（4月〜9月）：6ヶ月 → <strong style="color:var(--accent2)">前払費用12,000円</strong>
+      </div>
+      <!-- 練習 -->
+      <div class="exam-section-title" style="margin-top:14px">✏️ 練習問題</div>
+      <p class="exam-p" style="margin-top:6px">家賃36,000円を12月1日に6ヶ月分（12月〜5月）前払いした。決算3月31日のとき、前払家賃はいくらか？</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <label style="font-size:.79rem">答え：<input type="number" id="k3ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+        <button class="mock-start-btn" style="width:auto;padding:8px 16px;font-size:.79rem" onclick="checkKessan(3,12000,'k3ans','k3r','k3exp')">答え合わせ</button>
+        <button class="reset-btn" onclick="resetKessan('k3ans','k3r','k3exp')">リセット</button>
+      </div>
+      <div id="k3r" style="display:none;margin-top:6px;padding:8px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div id="k3exp" class="exam-note" style="display:none;margin-top:6px">1ヶ月分：36,000 ÷ 6 ＝ 6,000円<br>翌期分（4月・5月）：2ヶ月 → 6,000 × 2 ＝ <strong>12,000円</strong></div>
+    </div>
+  </div>
+
+  <!-- 5. 貸倒引当金 -->
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">⑤ 貸倒引当金 <span class="tog">▼</span></div>
+    <div class="ref-bd">
+      <p class="exam-p">売掛金などは将来回収できないリスクがあります。<br>決算でそのリスク分をあらかじめ費用として計上しておくのが<strong>貸倒引当金</strong>です。</p>
+      <div class="exam-note" style="margin-top:8px">
+        <strong>設定額 ＝ 売掛金残高 × 設定率</strong><br>
+        ただし既存の引当金残高がある場合は差額だけ追加計上する
+      </div>
+      <div class="exam-section-title" style="margin-top:12px">決算整理仕訳</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;line-height:2;margin-top:8px">
+        （借）貸倒引当金繰入 XX,XXX ／（貸）貸倒引当金 XX,XXX
+      </div>
+      <div class="exam-section-title" style="margin-top:12px">差額補充法の例</div>
+      <div style="background:var(--pale);border-radius:5px;padding:10px 12px;font-size:.8rem;line-height:2">
+        売掛金残高：200,000円　設定率：3%　引当金残高：2,000円<br>
+        必要額：200,000 × 3% ＝ 6,000円<br>
+        追加計上：6,000 − 2,000 ＝ <strong style="color:var(--accent2)">4,000円</strong><br>
+        仕訳：（借）貸倒引当金繰入 4,000 ／（貸）貸倒引当金 4,000
+      </div>
+      <!-- 練習 -->
+      <div class="exam-section-title" style="margin-top:14px">✏️ 練習問題</div>
+      <p class="exam-p" style="margin-top:6px">売掛金残高500,000円に対し2%の貸倒引当金を設定する。引当金の既存残高は3,000円。繰入額はいくらか？</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <label style="font-size:.79rem">答え：<input type="number" id="k4ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+        <button class="mock-start-btn" style="width:auto;padding:8px 16px;font-size:.79rem" onclick="checkKessan(4,7000,'k4ans','k4r','k4exp')">答え合わせ</button>
+        <button class="reset-btn" onclick="resetKessan('k4ans','k4r','k4exp')">リセット</button>
+      </div>
+      <div id="k4r" style="display:none;margin-top:6px;padding:8px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div id="k4exp" class="exam-note" style="display:none;margin-top:6px">必要額：500,000 × 2% ＝ 10,000円<br>繰入額：10,000 − 3,000 ＝ <strong>7,000円</strong></div>
+    </div>
+  </div>
+
+  <!-- 6. 損益振替 -->
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">⑥ 損益振替・当期純利益の確定 <span class="tog">▼</span></div>
+    <div class="ref-bd">
+      <p class="exam-p">決算整理が終わったら、すべての収益と費用を<strong>損益勘定</strong>に集めて当期純利益を計算します。</p>
+      <div class="exam-section-title" style="margin-top:10px">振替の流れ</div>
+      <div style="display:grid;gap:7px;margin-top:8px">
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem">
+          <strong>① 収益を損益勘定へ振替</strong><br>
+          （借）売上 500,000 ／（貸）損益 500,000<br>
+          <span style="color:#888;font-size:.73rem">収益は貸方残高なので、借方に振替</span>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem">
+          <strong>② 費用を損益勘定へ振替</strong><br>
+          （借）損益 350,000 ／（貸）仕入 350,000<br>
+          <span style="color:#888;font-size:.73rem">費用は借方残高なので、貸方に振替</span>
+        </div>
+        <div style="background:var(--pale);border-radius:5px;padding:9px 12px;font-size:.8rem">
+          <strong>③ 純利益を資本金へ振替</strong><br>
+          （借）損益 150,000 ／（貸）資本金 150,000<br>
+          <span style="color:#888;font-size:.73rem">収益500,000 − 費用350,000 ＝ 純利益150,000円</span>
+        </div>
+      </div>
+      <div class="exam-note" style="margin-top:10px">💡 損益勘定は決算だけに使う一時的な勘定。純利益は最終的に純資産（資本金）に加わります。</div>
+      <!-- 練習 -->
+      <div class="exam-section-title" style="margin-top:14px">✏️ 練習問題</div>
+      <p class="exam-p" style="margin-top:6px">収益合計800,000円、費用合計620,000円のとき、当期純利益はいくらか？</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center">
+        <label style="font-size:.79rem">答え：<input type="number" id="k5ans" style="width:110px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 6px;font-size:.79rem;text-align:right" placeholder="円"> 円</label>
+        <button class="mock-start-btn" style="width:auto;padding:8px 16px;font-size:.79rem" onclick="checkKessan(5,180000,'k5ans','k5r','k5exp')">答え合わせ</button>
+        <button class="reset-btn" onclick="resetKessan('k5ans','k5r','k5exp')">リセット</button>
+      </div>
+      <div id="k5r" style="display:none;margin-top:6px;padding:8px 12px;border-radius:5px;font-size:.8rem;font-weight:700"></div>
+      <div id="k5exp" class="exam-note" style="display:none;margin-top:6px">800,000 − 620,000 ＝ <strong>180,000円</strong></div>
+    </div>
+  </div>
+
+  <!-- 7. まとめ -->
+  <div class="exam-card">
+    <div class="exam-card-hd">📌 決算整理 まとめチェックリスト</div>
+    <div class="exam-card-body">
+      <div class="exam-check-list">
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>売上原価</strong>：期首繰越商品を仕入に加え、期末商品を繰越商品に振替した</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>減価償却</strong>：取得原価÷耐用年数（月割りの場合は×月数÷12）で計上した</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>前払費用</strong>：翌期分の費用を資産に振り替えた</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>未払費用</strong>：当期分の未払い費用を負債に計上した</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>前受収益</strong>：翌期分の収益を負債に繰り延べた</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>未収収益</strong>：当期分の未収収益を資産に計上した</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>貸倒引当金</strong>：売掛金残高×設定率から既存残高を引いた差額を繰入した</span></div>
+        <div class="ck-item"><span class="ck-ico">☑️</span><span><strong>消耗品</strong>：期末未使用分を消耗品費から消耗品（資産）に振替した</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REFERENCE -->
+<div id="tab-reference" class="main hidden">
+  <div class="sec-hd"><span class="badge">REF</span><span class="sec-ttl">重要用語・概念集</span></div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第1章 ─ 簿記の基本 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">簿記</div><div>会社のお金の出入りを一定のルールで記録・整理する技術</div>
+      <div class="trm">仕訳</div><div>取引を借方（左）と貸方（右）に分けて記録する作業。簿記の基本単位</div>
+      <div class="trm">借方</div><div>仕訳の左側。資産の増加・負債の減少・費用の発生を記録する</div>
+      <div class="trm">貸方</div><div>仕訳の右側。資産の減少・負債の増加・収益の発生を記録する</div>
+      <div class="trm">勘定科目</div><div>取引を分類するラベル。現金・売掛金・買掛金・売上・給料など</div>
+      <div class="trm">取引</div><div>資産・負債・純資産・収益・費用のいずれかを変動させる出来事</div>
+      <div class="trm">元帳</div><div>勘定科目ごとに取引を記録した帳簿。総勘定元帳が基本</div>
+      <div class="trm">転記</div><div>仕訳帳の内容を総勘定元帳の各勘定口座に移す作業</div>
+      <div class="trm">残高</div><div>借方合計と貸方合計の差額。その科目の現在の金額</div>
+      <div class="trm">複式簿記</div><div>1つの取引を借方・貸方の2面から記録する方法。3級はこれ</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第2章 ─ 財務諸表 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">貸借対照表（B/S）</div><div>一定時点の財政状態を示す書類。資産＝負債＋純資産 が成立する</div>
+      <div class="trm">損益計算書（P/L）</div><div>一定期間の経営成績を示す書類。収益－費用＝当期純損益</div>
+      <div class="trm">当期純利益</div><div>収益合計－費用合計。プラスなら利益、マイナスなら損失</div>
+      <div class="trm">繰越利益剰余金</div><div>過去から積み上げてきた利益の累積額（純資産の一部）</div>
+      <div class="trm">流動資産</div><div>1年以内に現金化できる資産。現金・売掛金・繰越商品など</div>
+      <div class="trm">固定資産</div><div>1年超使用する資産。建物・備品・土地・車両運搬具など</div>
+      <div class="trm">流動負債</div><div>1年以内に返済すべき負債。買掛金・短期借入金・未払費用など</div>
+      <div class="trm">固定負債</div><div>返済期限が1年超の負債。長期借入金など</div>
+      <div class="trm">純資産</div><div>資産から負債を引いた自己資本。資本金・繰越利益剰余金など</div>
+      <div class="trm">売上総利益</div><div>売上－売上原価。「粗利」とも呼ばれる</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第3章 ─ 資産の勘定科目 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">現金</div><div>紙幣・硬貨のほか、他人振出小切手・郵便為替証書・送金小切手も含む</div>
+      <div class="trm">普通預金</div><div>出し入れ自由な銀行預金口座</div>
+      <div class="trm">当座預金</div><div>小切手・手形の決済に使う口座。利息なし</div>
+      <div class="trm">定期預金</div><div>一定期間引き出せない預金</div>
+      <div class="trm">売掛金</div><div>商品を掛けで販売した代金の回収権（資産）</div>
+      <div class="trm">受取手形</div><div>得意先から受け取った約束手形（資産）</div>
+      <div class="trm">電子記録債権</div><div>電子的な受取手形に相当する資産</div>
+      <div class="trm">繰越商品</div><div>期末に残った商品在庫（資産）。決算で残高が更新される</div>
+      <div class="trm">前払費用</div><div>当期に払ったが翌期分の費用（資産）</div>
+      <div class="trm">未収収益</div><div>当期分の収益がまだ受け取れていない（資産）</div>
+      <div class="trm">仮払金</div><div>金額未確定の先払い。精算後に正しい科目に振り替える</div>
+      <div class="trm">貸付金</div><div>他者に貸したお金。返済されると資産が減る</div>
+      <div class="trm">備品</div><div>パソコン・机などの有形固定資産</div>
+      <div class="trm">建物</div><div>会社が所有・使用する建築物（有形固定資産）</div>
+      <div class="trm">土地</div><div>会社が所有する土地。減価償却しない</div>
+      <div class="trm">車両運搬具</div><div>営業・配達などに使う車（有形固定資産）</div>
+      <div class="trm">ソフトウェア</div><div>業務用ソフトなどの無形固定資産</div>
+      <div class="trm">特許権</div><div>特許を受けた権利（無形固定資産）</div>
+      <div class="trm">小口現金</div><div>日常的な少額支払いのために手元に置く現金</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第4章 ─ 負債・純資産の勘定科目 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">買掛金</div><div>商品を掛けで仕入れた代金の支払義務（負債）</div>
+      <div class="trm">支払手形</div><div>仕入先に振り出した約束手形（負債）</div>
+      <div class="trm">電子記録債務</div><div>電子的な支払手形に相当する負債</div>
+      <div class="trm">借入金</div><div>銀行などから借りたお金（負債）。返済義務がある</div>
+      <div class="trm">未払費用</div><div>当期に発生したが未払いの費用（負債）</div>
+      <div class="trm">前受収益</div><div>当期に受け取ったが翌期分の収益（負債）</div>
+      <div class="trm">預り金</div><div>従業員の源泉所得税など一時的に預かったお金（負債）</div>
+      <div class="trm">未払金</div><div>商品以外の物品・サービスの後払い代金（負債）</div>
+      <div class="trm">仮受金</div><div>内容不明の入金を一時的に処理する科目（負債）</div>
+      <div class="trm">商品券</div><div>発行した商品券。商品を渡すまで負債として計上</div>
+      <div class="trm">資本金</div><div>株主・事業主が出資した元手（純資産）</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第5章 ─ 収益・費用の勘定科目 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">売上</div><div>商品・サービスの販売による収益</div>
+      <div class="trm">受取利息</div><div>預金・貸付金などから得た利息（収益）</div>
+      <div class="trm">受取手数料</div><div>手数料を受け取ったときの収益</div>
+      <div class="trm">受取家賃</div><div>不動産を貸して受け取った家賃（収益）</div>
+      <div class="trm">固定資産売却益</div><div>固定資産を帳簿価額より高く売ったときの利益（収益）</div>
+      <div class="trm">仕入</div><div>販売用商品の購入費用（売上原価に含まれる）</div>
+      <div class="trm">給料</div><div>従業員に支払う労働報酬（費用）</div>
+      <div class="trm">支払利息</div><div>借入金などの利息（費用）</div>
+      <div class="trm">支払家賃</div><div>事務所・店舗などの家賃（費用）</div>
+      <div class="trm">水道光熱費</div><div>電気・ガス・水道代（費用）</div>
+      <div class="trm">通信費</div><div>電話・郵便・切手代（費用）</div>
+      <div class="trm">広告宣伝費</div><div>広告・チラシなどの費用</div>
+      <div class="trm">消耗品費</div><div>ボールペン・コピー用紙などの費用</div>
+      <div class="trm">旅費交通費</div><div>電車代・出張費など（費用）</div>
+      <div class="trm">支払手数料</div><div>振込手数料・クレジット手数料など（費用）</div>
+      <div class="trm">租税公課</div><div>固定資産税・印紙税など（費用）</div>
+      <div class="trm">減価償却費</div><div>固定資産の価値減少を費用化したもの</div>
+      <div class="trm">貸倒損失</div><div>売掛金などが回収不能になったときの損失（費用）</div>
+      <div class="trm">貸倒引当金繰入</div><div>将来の貸倒れに備えて計上する費用</div>
+      <div class="trm">固定資産売却損</div><div>固定資産を帳簿価額より安く売ったときの損失（費用）</div>
+      <div class="trm">雑損</div><div>現金過不足（借方残）など小さな損失（費用）</div>
+      <div class="trm">雑益</div><div>現金過不足（貸方残）など小さな利益（収益）</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第6章 ─ 手形・電子記録 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">約束手形</div><div>「○月○日に○円払います」という支払約束書</div>
+      <div class="trm">受取手形</div><div>もらった約束手形（資産）。期日に当座預金に入金される</div>
+      <div class="trm">支払手形</div><div>振り出した約束手形（負債）。期日に当座預金から引き落とされる</div>
+      <div class="trm">電子記録債権</div><div>紙の受取手形をデジタル化したもの（資産）</div>
+      <div class="trm">電子記録債務</div><div>紙の支払手形をデジタル化したもの（負債）</div>
+      <div class="trm">小切手</div><div>当座預金からすぐ引き落とせる支払指示書。受け取ったら現金に含める</div>
+      <div class="trm">他人振出小切手</div><div>他者が振り出した小切手。簿記では現金として扱う</div>
+      <div class="trm">当座借越</div><div>当座預金残高を超えて引き落とせる契約。超過分は借入扱い</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第7章 ─ 固定資産・減価償却 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">取得原価</div><div>固定資産を購入したときの値段＋付随費用（送料・据付費など）</div>
+      <div class="trm">残存価額</div><div>耐用年数終了後の見込み価値。3級では0円のケースが多い</div>
+      <div class="trm">耐用年数</div><div>固定資産を使用できる見込み期間</div>
+      <div class="trm">減価償却</div><div>固定資産の価値減少を毎年少しずつ費用として計上すること</div>
+      <div class="trm">定額法</div><div>（取得原価－残存価額）÷耐用年数。毎年同額を償却する方法</div>
+      <div class="trm">減価償却累計額</div><div>これまでの償却額の合計。固定資産の帳簿価額を示す評価勘定</div>
+      <div class="trm">帳簿価額</div><div>取得原価－減価償却累計額。現在の帳簿上の価値</div>
+      <div class="trm">間接法</div><div>減価償却累計額という別勘定を使う方法（3級の標準）</div>
+      <div class="trm">固定資産売却益</div><div>売却価格＞帳簿価額 のときに生じる利益</div>
+      <div class="trm">固定資産売却損</div><div>売却価格＜帳簿価額 のときに生じる損失</div>
+      <div class="trm">資本的支出</div><div>資産の価値を高める支出→取得原価に加算する</div>
+      <div class="trm">収益的支出</div><div>現状維持のための修繕費→費用として計上する</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第8章 ─ 決算整理・経過勘定 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">決算</div><div>1年間の帳簿を締めて財務諸表を作成する一連の作業</div>
+      <div class="trm">決算整理仕訳</div><div>期末に行う修正仕訳。減価償却・経過勘定・売上原価算定など</div>
+      <div class="trm">経過勘定</div><div>費用・収益の期間ズレを修正するための4つの勘定科目</div>
+      <div class="trm">前払費用</div><div>払い済みだが翌期の費用→資産として計上</div>
+      <div class="trm">未払費用</div><div>当期の費用だが未払い→負債として計上</div>
+      <div class="trm">前受収益</div><div>受け取り済みだが翌期の収益→負債として計上</div>
+      <div class="trm">未収収益</div><div>当期の収益だが未収→資産として計上</div>
+      <div class="trm">売上原価</div><div>期首商品＋当期仕入－期末商品。販売した商品の仕入原価</div>
+      <div class="trm">繰越商品</div><div>期末の商品在庫。翌期に持ち越す資産</div>
+      <div class="trm">貸倒引当金</div><div>将来の貸倒れに備えて設定する評価勘定（資産のマイナス）</div>
+      <div class="trm">損益勘定</div><div>決算で費用・収益をまとめて当期純損益を計算する勘定</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第9章 ─ 試算表・精算表 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">試算表</div><div>各勘定科目の借方・貸方を集計した一覧表。ミスチェックに使う</div>
+      <div class="trm">合計試算表</div><div>各勘定の借方・貸方それぞれの合計を示す</div>
+      <div class="trm">残高試算表</div><div>借方・貸方の差額（残高）だけを示す。よく試験に出る</div>
+      <div class="trm">精算表</div><div>決算作業を一枚にまとめた作業用シート</div>
+      <div class="trm">決算整理後残高試算表</div><div>決算整理仕訳を反映した後の残高試算表。第3問頻出</div>
+      <div class="trm">補助簿</div><div>特定の取引を詳しく記録する帳簿。売掛金元帳・商品有高帳など</div>
+      <div class="trm">商品有高帳</div><div>商品の入出庫を記録する補助帳簿</div>
+      <div class="trm">固定資産台帳</div><div>固定資産の購入・減価償却・売却を管理する補助帳簿</div>
+    </div></div>
+  </div>
+
+  <div class="ref-card">
+    <div class="ref-hd" onclick="toggleRef(this)">第10章 ─ その他・よく出る用語 <span class="tog">▼</span></div>
+    <div class="ref-bd"><div class="tgrid">
+      <div class="trm">掛け取引</div><div>商品の受け渡しと代金の支払いを別の日に行う取引</div>
+      <div class="trm">得意先</div><div>商品を販売する相手（売掛金が生じる）</div>
+      <div class="trm">仕入先</div><div>商品を購入する相手（買掛金が生じる）</div>
+      <div class="trm">三分法</div><div>仕入・売上・繰越商品の3科目で商品売買を処理する方法</div>
+      <div class="trm">源泉徴収</div><div>給料から所得税を差し引いて会社が代わりに納める制度</div>
+      <div class="trm">租税公課</div><div>固定資産税・印紙税など会社が負担する税金（費用）</div>
+      <div class="trm">通貨代用証券</div><div>すぐ現金に換えられる証券。他人振出小切手・郵便為替証書など</div>
+      <div class="trm">現金過不足</div><div>帳簿と実際の現金が合わないときに使う仮勘定</div>
+      <div class="trm">仮払金</div><div>金額未確定の先払い（資産）。精算後に正しい科目へ</div>
+      <div class="trm">仮受金</div><div>内容不明の入金（負債）。内容確定後に正しい科目へ</div>
+      <div class="trm">当座借越</div><div>当座預金残高ゼロを超えて小切手を振り出せる契約</div>
+      <div class="trm">クレジット売掛金</div><div>クレジット決済の未収金（資産）。手数料を差し引いて計上</div>
+      <div class="trm">棚卸</div><div>期末に在庫を数えて帳簿残高と照合する作業</div>
+    </div></div>
+  </div>
+</div>
+
+<!-- JOURNAL -->
+<div id="tab-journal" class="main hidden">
+  <div class="sec-hd"><span class="badge">仕訳</span><span class="sec-ttl">頻出仕訳パターン辞典</span></div>
+  <div id="journalList"></div>
+</div>
+
+</div><!-- /app-area -->
+
+<!-- モーダルは廃止 -->
+
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
