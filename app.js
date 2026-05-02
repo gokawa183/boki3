@@ -177,6 +177,10 @@ async function init(){
   if (visited) {
     document.getElementById('welcome-screen').classList.add('hidden');
     document.getElementById('app-area').classList.remove('hidden');
+    const tabBtn = [...document.querySelectorAll('.tab')].find(
+      b => b.getAttribute('onclick') && b.getAttribute('onclick').includes("'quiz'")
+    );
+    showTab('quiz', tabBtn);
     renderStats();
   }
   // 初回はウェルカム画面を表示（app-areaはhiddenのまま）

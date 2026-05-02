@@ -116,3 +116,7 @@ const useCloudStorage = window.storage && typeof window.storage.get === 'functio
 - `--accent` / `--accent2`: 強調色（赤系・青系）
 - `--gold`: サブ強調色
 - `--cg` / `--wg`: 正解色・不正解色
+
+## コミュニケーション
+
+- ユーザーへの確認・質問・コマンド実行前の確認はすべて**日本語**で行う
