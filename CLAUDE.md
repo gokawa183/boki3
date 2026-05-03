@@ -39,7 +39,7 @@ git push origin main
 
 ## データ構造（data.js）
 
-### `rawQs`（練習問題 120問）
+### `rawQs`（練習問題 150問）
 
 ```js
 {
