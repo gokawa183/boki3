@@ -469,7 +469,7 @@ function startApp(tab) {
 }
 
 function renderStudyTab(){
-  const lkOrder=['basics','shiwake','kamoku','deposit','cashcontent','kakeuri','tegata','kitte','kotei','mibarai','maebara','chosahyo','seizan','bspl','kessanuri'];
+  const lkOrder=['basics','shiwake','kamoku','deposit','cashcontent','koguchi','kakeuri','tegata','kitte','kotei','mibarai','maebara','chosahyo','seizan','bspl','kessanuri'];
   const el=document.getElementById('studyList');
   el.innerHTML=lkOrder.map(lk=>{
     const lesson=lessons[lk];

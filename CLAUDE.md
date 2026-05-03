@@ -55,7 +55,7 @@ git push origin main
 
 ### `lessons`（基礎学習 15テーマ）
 
-キー例: `'deposit'`, `'kakeuri'`, `'kotei'`, `'mibarai'` …
+キー例: `'deposit'`, `'cashcontent'`, `'koguchi'`, `'kakeuri'`, `'kotei'`, `'mibarai'` …
 
 各レッスン: `{ title, sections:[{h,p,eg}], practice:[{q,opts,ans,exp}] }`
 
