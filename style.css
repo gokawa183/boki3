@@ -320,3 +320,33 @@
   .wl-skip{display:block;width:100%;padding:10px;background:transparent;border:none;
     font-family:'Noto Serif JP',serif;font-size:.75rem;color:#bbb;cursor:pointer;text-align:center;}
   .wl-skip:hover{color:#888;}
+  /* 総勘定元帳 練習 */
+  .ldg-card{background:#fff;border:1px solid var(--border);border-radius:6px;
+    padding:16px;box-shadow:2px 2px 6px var(--shadow);margin-bottom:12px;}
+  .ldg-meta{font-size:.72rem;font-weight:700;letter-spacing:.06em;color:var(--gold);margin-bottom:8px;}
+  .ldg-desc{font-size:.84rem;line-height:1.65;margin-bottom:14px;}
+  .ldg-tbl-wrap{overflow-x:auto;margin-bottom:14px;}
+  .ldg-acct-name{font-size:.85rem;font-weight:700;text-align:center;padding:7px;
+    background:var(--ink);color:var(--paper);border-radius:4px 4px 0 0;}
+  .ldg-tbl{width:100%;border-collapse:collapse;font-size:.8rem;}
+  .ldg-tbl thead tr{background:var(--pale);}
+  .ldg-tbl th,.ldg-tbl td{padding:7px 8px;border-bottom:1px solid var(--border);}
+  .ldg-num{text-align:right;min-width:88px;white-space:nowrap;}
+  .ldg-lbl{font-size:.78rem;}
+  .ldg-lbl-r{text-align:right;}
+  .ldg-bar{width:3px;background:var(--ink);padding:0;}
+  .ldg-ans-inp{width:82px;padding:4px 6px;border:1.5px solid var(--accent2);
+    border-radius:3px;font-size:16px;text-align:right;}
+  .ldg-ans-inp:disabled{background:#f0f0f0;color:#888;}
+  .ldg-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .ldg-check-btn{padding:9px 22px;background:var(--accent);color:#fff;border:none;
+    border-radius:6px;font-size:.88rem;font-weight:700;cursor:pointer;}
+  .ldg-check-btn:disabled{opacity:.45;cursor:default;}
+  .ldg-check-btn:hover:not(:disabled){opacity:.85;}
+  .ldg-next-btn{padding:9px 22px;background:var(--accent2);color:#fff;border:none;
+    border-radius:6px;font-size:.88rem;font-weight:700;cursor:pointer;}
+  .ldg-next-btn:hover{opacity:.85;}
+  .ldg-result{margin-top:12px;padding:12px 14px;border-radius:6px;
+    font-size:.84rem;line-height:1.75;}
+  .ldg-ok{background:var(--cl);color:var(--cg);}
+  .ldg-ng{background:var(--wl);color:var(--wg);}

@@ -352,12 +352,13 @@ function buildRows(d,c){
 }
 
 function showTab(tab,el){
-  ['quiz','stats','study','exam','mock','q2study','q3study','kessan','reference','journal'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+  ['quiz','stats','study','exam','mock','q2study','q3study','kessan','reference','journal','ledger'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
   document.getElementById('tab-'+tab).classList.remove('hidden');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   if(el)el.classList.add('active');
   if(tab==='stats')renderStats();
   if(tab==='study')renderStudyTab();
+  if(tab==='ledger')initLedgerTab();
 }
 
 // ===== 決算対策 採点関数 =====
@@ -1121,6 +1122,166 @@ function clearStudySearch(){
     const card=document.getElementById('sc-'+lk);
     if(card)card.style.display='';
   });
+}
+
+// ===== 総勘定元帳 練習 =====
+const LEDGER_PROBLEMS=[
+  {title:'現金勘定の次月繰越',account:'現金',
+   desc:'次の現金勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'売上',amount:200000},{label:'借入金',amount:100000}],
+   credits:[{label:'仕入',amount:150000},{label:'次月繰越',amount:null}],
+   answer:150000,
+   exp:'借方合計 (200,000＋100,000)＝300,000<br>次月繰越 ＝ 300,000 − 150,000 ＝ <strong>150,000円</strong>'},
+  {title:'売掛金勘定の次月繰越',account:'売掛金',
+   desc:'次の売掛金勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'売上',amount:300000}],
+   credits:[{label:'現金',amount:200000},{label:'売上（返品）',amount:30000},{label:'次月繰越',amount:null}],
+   answer:70000,
+   exp:'借方合計 300,000 − 貸方合計 (200,000＋30,000) ＝ <strong>70,000円</strong>'},
+  {title:'買掛金勘定の次月繰越',account:'買掛金',
+   desc:'次の買掛金勘定をもとに、次月繰越の金額を求めなさい。\n（買掛金は負債→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'当座預金',amount:150000},{label:'次月繰越',amount:null}],
+   credits:[{label:'仕入',amount:250000}],
+   answer:100000,
+   exp:'貸方合計 250,000 − 借方 当座預金150,000 ＝ <strong>100,000円</strong>'},
+  {title:'借入金勘定の次月繰越',account:'借入金',
+   desc:'次の借入金勘定をもとに、次月繰越の金額を求めなさい。\n（借入金は負債→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'現金（返済）',amount:100000},{label:'次月繰越',amount:null}],
+   credits:[{label:'現金（借入）',amount:300000}],
+   answer:200000,
+   exp:'貸方合計 300,000 − 借方 現金100,000 ＝ <strong>200,000円</strong>'},
+  {title:'売上勘定の次月繰越',account:'売上',
+   desc:'次の売上勘定をもとに、次月繰越の金額を求めなさい。\n（売上は収益→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'次月繰越',amount:null}],
+   credits:[{label:'売掛金',amount:400000},{label:'現金',amount:150000}],
+   answer:550000,
+   exp:'貸方合計 (400,000＋150,000) ＝ <strong>550,000円</strong><br>収益科目の次月繰越は借方側に記入します。'},
+  {title:'備品勘定の次月繰越',account:'備品',
+   desc:'次の備品勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'前月繰越',amount:300000},{label:'未払金',amount:200000}],
+   credits:[{label:'次月繰越',amount:null}],
+   answer:500000,
+   exp:'借方合計 (300,000＋200,000) ＝ <strong>500,000円</strong>'},
+  {title:'受取手形勘定の次月繰越',account:'受取手形',
+   desc:'次の受取手形勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'売掛金',amount:200000},{label:'売上',amount:100000}],
+   credits:[{label:'当座預金',amount:150000},{label:'次月繰越',amount:null}],
+   answer:150000,
+   exp:'借方合計 (200,000＋100,000)＝300,000<br>次月繰越 ＝ 300,000 − 150,000 ＝ <strong>150,000円</strong>'},
+  {title:'支払手形勘定の次月繰越',account:'支払手形',
+   desc:'次の支払手形勘定をもとに、次月繰越の金額を求めなさい。\n（支払手形は負債→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'当座預金',amount:100000},{label:'次月繰越',amount:null}],
+   credits:[{label:'買掛金',amount:250000}],
+   answer:150000,
+   exp:'貸方合計 250,000 − 借方 当座預金100,000 ＝ <strong>150,000円</strong>'},
+  {title:'未払費用勘定の次月繰越',account:'未払費用',
+   desc:'次の未払費用勘定をもとに、次月繰越の金額を求めなさい。\n（未払費用は負債→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'現金',amount:30000},{label:'次月繰越',amount:null}],
+   credits:[{label:'支払家賃',amount:30000},{label:'支払利息',amount:10000}],
+   answer:10000,
+   exp:'貸方合計 (30,000＋10,000)＝40,000<br>次月繰越 ＝ 40,000 − 30,000 ＝ <strong>10,000円</strong>'},
+  {title:'減価償却累計額勘定の次月繰越',account:'減価償却累計額',
+   desc:'次の減価償却累計額勘定をもとに、次月繰越の金額を求めなさい。\n（貸方残高科目のため、次月繰越は借方に記入します）',
+   debits: [{label:'次月繰越',amount:null}],
+   credits:[{label:'前月繰越',amount:200000},{label:'減価償却費',amount:100000}],
+   answer:300000,
+   exp:'貸方合計 (200,000＋100,000) ＝ <strong>300,000円</strong><br>貸方残高科目の次月繰越は借方側に記入します。'},
+  {title:'現金勘定の不明金額',account:'現金',
+   desc:'借方の（　）にあてはまる金額を求めなさい。',
+   debits: [{label:'売掛金',amount:500000},{label:'借入金',amount:null}],
+   credits:[{label:'支払家賃',amount:80000},{label:'給料',amount:120000},{label:'次月繰越',amount:380000}],
+   answer:80000,
+   exp:'貸方合計 (80,000＋120,000＋380,000)＝580,000<br>不明金額 ＝ 580,000 − 500,000 ＝ <strong>80,000円</strong>'},
+  {title:'売掛金勘定の不明金額',account:'売掛金',
+   desc:'貸方の（　）にあてはまる金額を求めなさい。',
+   debits: [{label:'売上',amount:450000},{label:'前月繰越',amount:80000}],
+   credits:[{label:'現金',amount:null},{label:'次月繰越',amount:350000}],
+   answer:180000,
+   exp:'借方合計 (450,000＋80,000)＝530,000<br>不明金額 ＝ 530,000 − 350,000 ＝ <strong>180,000円</strong>'},
+];
+
+let _ldgIdx=-1;
+
+function initLedgerTab(){
+  if(_ldgIdx===-1)nextLedgerProblem();
+}
+
+function nextLedgerProblem(){
+  const len=LEDGER_PROBLEMS.length;
+  let idx;
+  do{idx=Math.floor(Math.random()*len);}while(idx===_ldgIdx&&len>1);
+  _ldgIdx=idx;
+  _renderLedgerProblem();
+}
+
+function _renderLedgerProblem(){
+  const p=LEDGER_PROBLEMS[_ldgIdx];
+  const el=document.getElementById('ledger-content');
+  const maxR=Math.max(p.debits.length,p.credits.length);
+  let rows='';
+  for(let i=0;i<maxR;i++){
+    const d=p.debits[i]||{label:'',amount:''};
+    const c=p.credits[i]||{label:'',amount:''};
+    const dA=d.amount===null
+      ?'<input type="number" id="ledgerAns" class="ldg-ans-inp" placeholder="?" inputmode="numeric">'
+      :(d.amount!==''?Number(d.amount).toLocaleString():'');
+    const cA=c.amount===null
+      ?'<input type="number" id="ledgerAns" class="ldg-ans-inp" placeholder="?" inputmode="numeric">'
+      :(c.amount!==''?Number(c.amount).toLocaleString():'');
+    rows+=`<tr>
+      <td class="ldg-lbl">${d.label||''}</td>
+      <td class="ldg-num">${dA}</td>
+      <td class="ldg-bar"></td>
+      <td class="ldg-num">${cA}</td>
+      <td class="ldg-lbl ldg-lbl-r">${c.label||''}</td>
+    </tr>`;
+  }
+  el.innerHTML=`
+    <div class="ldg-card">
+      <div class="ldg-meta">問題 ${_ldgIdx+1}／${LEDGER_PROBLEMS.length} — ${p.title}</div>
+      <p class="ldg-desc">${p.desc.replace(/\n/g,'<br>')}</p>
+      <div class="ldg-tbl-wrap">
+        <div class="ldg-acct-name">${p.account}</div>
+        <table class="ldg-tbl">
+          <thead><tr>
+            <th class="ldg-lbl">摘要</th><th class="ldg-num">借方</th>
+            <th class="ldg-bar"></th>
+            <th class="ldg-num">貸方</th><th class="ldg-lbl ldg-lbl-r">摘要</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div id="ldg-result" class="ldg-result" style="display:none"></div>
+      <div class="ldg-btns">
+        <button class="ldg-check-btn" id="ldgCheckBtn" onclick="checkLedger()">答え合わせ</button>
+        <button class="ldg-next-btn" onclick="nextLedgerProblem()">次の問題 →</button>
+      </div>
+    </div>`;
+}
+
+function checkLedger(){
+  const p=LEDGER_PROBLEMS[_ldgIdx];
+  const inp=document.getElementById('ledgerAns');
+  const res=document.getElementById('ldg-result');
+  const btn=document.getElementById('ldgCheckBtn');
+  if(!inp||!res)return;
+  const val=parseInt(inp.value.replace(/,/g,''));
+  if(isNaN(val)){
+    res.textContent='数値を入力してください';
+    res.className='ldg-result ldg-ng';
+    res.style.display='block';
+    return;
+  }
+  if(val===p.answer){
+    res.innerHTML='✅ 正解！<br>'+p.exp;
+    res.className='ldg-result ldg-ok';
+  }else{
+    res.innerHTML=`❌ 不正解。正解は <strong>${p.answer.toLocaleString()}円</strong> です。<br><br>${p.exp}`;
+    res.className='ldg-result ldg-ng';
+  }
+  res.style.display='block';
+  inp.disabled=true;
+  btn.disabled=true;
 }
 
 init();
