@@ -135,6 +135,23 @@ async function renderStats(){
       ${btns?`<div class="stat-lesson-btns">${btns}</div>`:''}
     </div>`;
   });
+
+  // 総勘定元帳練習の成績
+  const ld=s['総勘定元帳']||{c:0,w:0};
+  const ldDone=ld.c+ld.w;
+  const ldR=ldDone>0?Math.round(ld.c/ldDone*100):null;
+  html+=`<div class="genre-card">
+    <div class="genre-top">
+      <div class="genre-name">📒 総勘定元帳練習</div>
+      <div class="genre-rate ${rateCol(ldR)}">${ldR!==null?ldR+'%':'未受験'}</div>
+    </div>
+    <div class="genre-bar-wrap"><div class="genre-bar ${barCol(ldR)}" style="width:${ldR||0}%"></div></div>
+    <div class="genre-sub">正解 ${ld.c} / 回答 ${ldDone}問　問題プール：${LEDGER_PROBLEMS.length}問</div>
+    <div class="stat-lesson-btns">
+      <button class="stat-lesson-btn" onclick="showTab('ledger',document.querySelectorAll('.tab')[5])">📒 元帳練習へ</button>
+    </div>
+  </div>`;
+
   el.innerHTML=html;
 }
 
@@ -1198,6 +1215,54 @@ const LEDGER_PROBLEMS=[
    credits:[{label:'現金',amount:null},{label:'次月繰越',amount:350000}],
    answer:180000,
    exp:'借方合計 (450,000＋80,000)＝530,000<br>不明金額 ＝ 530,000 − 350,000 ＝ <strong>180,000円</strong>'},
+  {title:'前払費用勘定の次月繰越',account:'前払費用',
+   desc:'次の前払費用勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'保険料',amount:12000},{label:'支払家賃',amount:6000}],
+   credits:[{label:'次月繰越',amount:null}],
+   answer:18000,
+   exp:'借方合計 (12,000＋6,000) ＝ <strong>18,000円</strong>'},
+  {title:'貸倒引当金勘定の次月繰越',account:'貸倒引当金',
+   desc:'次の貸倒引当金勘定をもとに、次月繰越の金額を求めなさい。\n（貸方残高科目のため、次月繰越は借方に記入します）',
+   debits: [{label:'貸倒損失',amount:5000},{label:'次月繰越',amount:null}],
+   credits:[{label:'前月繰越',amount:5000},{label:'貸倒引当金繰入',amount:8000}],
+   answer:8000,
+   exp:'貸方合計 (5,000＋8,000)＝13,000 − 借方 貸倒損失5,000 ＝ <strong>8,000円</strong>'},
+  {title:'仕入勘定の次月繰越',account:'仕入',
+   desc:'次の仕入勘定をもとに、次月繰越の金額を求めなさい。\n（費用科目→借方残高のため、次月繰越は貸方に記入します）',
+   debits: [{label:'買掛金',amount:300000},{label:'現金',amount:100000}],
+   credits:[{label:'次月繰越',amount:null}],
+   answer:400000,
+   exp:'借方合計 (300,000＋100,000) ＝ <strong>400,000円</strong>'},
+  {title:'普通預金勘定の次月繰越',account:'普通預金',
+   desc:'次の普通預金勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'売掛金',amount:500000},{label:'受取利息',amount:1000}],
+   credits:[{label:'給料',amount:200000},{label:'水道光熱費',amount:30000},{label:'次月繰越',amount:null}],
+   answer:271000,
+   exp:'借方合計 (500,000＋1,000)＝501,000 − 貸方 (200,000＋30,000) ＝ <strong>271,000円</strong>'},
+  {title:'資本金勘定の次月繰越',account:'資本金',
+   desc:'次の資本金勘定をもとに、次月繰越の金額を求めなさい。\n（純資産→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'次月繰越',amount:null}],
+   credits:[{label:'現金（元入れ）',amount:500000},{label:'損益（当期利益）',amount:100000}],
+   answer:600000,
+   exp:'貸方合計 (500,000＋100,000) ＝ <strong>600,000円</strong><br>純資産は貸方残高なので次月繰越は借方側に記入します。'},
+  {title:'繰越商品勘定の次月繰越',account:'繰越商品',
+   desc:'次の繰越商品勘定をもとに、次月繰越の金額を求めなさい。',
+   debits: [{label:'前月繰越',amount:40000},{label:'仕入（期末商品）',amount:30000}],
+   credits:[{label:'仕入（期首商品）',amount:40000},{label:'次月繰越',amount:null}],
+   answer:30000,
+   exp:'借方合計 (40,000＋30,000)＝70,000 − 貸方 仕入40,000 ＝ <strong>30,000円</strong>（期末在庫）'},
+  {title:'当座預金勘定の不明金額',account:'当座預金',
+   desc:'借方の（　）にあてはまる前月繰越の金額を求めなさい。',
+   debits: [{label:'売掛金',amount:400000},{label:'借入金',amount:200000},{label:'前月繰越',amount:null}],
+   credits:[{label:'買掛金',amount:250000},{label:'給料',amount:180000},{label:'次月繰越',amount:320000}],
+   answer:150000,
+   exp:'貸方合計 (250,000＋180,000＋320,000)＝750,000<br>不明金額 ＝ 750,000 − (400,000＋200,000) ＝ <strong>150,000円</strong>'},
+  {title:'受取利息勘定の次月繰越',account:'受取利息',
+   desc:'次の受取利息勘定をもとに、次月繰越の金額を求めなさい。\n（収益→貸方残高のため、次月繰越は借方に記入します）',
+   debits: [{label:'次月繰越',amount:null}],
+   credits:[{label:'普通預金',amount:3000},{label:'未収収益',amount:2000}],
+   answer:5000,
+   exp:'貸方合計 (3,000＋2,000) ＝ <strong>5,000円</strong><br>収益科目の次月繰越は借方側に記入します。'},
 ];
 
 let _ldgIdx=-1;
@@ -1259,7 +1324,7 @@ function _renderLedgerProblem(){
     </div>`;
 }
 
-function checkLedger(){
+async function checkLedger(){
   const p=LEDGER_PROBLEMS[_ldgIdx];
   const inp=document.getElementById('ledgerAns');
   const res=document.getElementById('ldg-result');
@@ -1272,7 +1337,8 @@ function checkLedger(){
     res.style.display='block';
     return;
   }
-  if(val===p.answer){
+  const isOk=val===p.answer;
+  if(isOk){
     res.innerHTML='✅ 正解！<br>'+p.exp;
     res.className='ldg-result ldg-ok';
   }else{
@@ -1282,6 +1348,7 @@ function checkLedger(){
   res.style.display='block';
   inp.disabled=true;
   btn.disabled=true;
+  await recordResult('総勘定元帳',isOk);
 }
 
 init();
