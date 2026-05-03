@@ -81,6 +81,13 @@
 <!-- STUDY -->
 <div id="tab-study" class="main hidden">
   <div class="sec-hd"><span class="badge">基礎</span><span class="sec-ttl">基礎学習</span></div>
+  <div class="study-search-bar">
+    <input type="text" id="studySearchInput" class="study-search-input" placeholder="キーワードで検索…"
+      onkeydown="if(event.key==='Enter')searchStudy()"
+      oninput="if(this.value==='')clearStudySearch()">
+    <button class="study-search-btn" onclick="searchStudy()">検索</button>
+  </div>
+  <div id="studySearchMsg" class="study-search-msg" style="display:none"></div>
   <div id="studyList"></div>
 </div>
 

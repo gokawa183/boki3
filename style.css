@@ -189,6 +189,16 @@
   .badge{background:var(--accent);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:3px 7px;border-radius:2px;}
   .sec-ttl{font-size:.95rem;font-weight:700;}
   .hidden{display:none!important;}
+  /* 基礎学習 検索バー */
+  .study-search-bar{display:flex;gap:8px;margin-bottom:14px;}
+  .study-search-input{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:6px;
+    font-size:.9rem;outline:none;transition:border-color .2s;}
+  .study-search-input:focus{border-color:var(--accent);}
+  .study-search-btn{padding:9px 18px;background:var(--accent);color:#fff;border:none;
+    border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .study-search-btn:hover{opacity:.85;}
+  .study-search-msg{padding:14px 16px;background:#fff3f3;border:1px solid #f5c0c0;
+    border-radius:6px;color:var(--accent);font-size:.88rem;font-weight:700;margin-bottom:12px;}
   /* 基礎学習タブ */
   .study-card{background:#fff;border:1px solid var(--border);border-radius:6px;
     margin-bottom:12px;overflow:hidden;box-shadow:2px 2px 6px var(--shadow);}

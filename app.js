@@ -468,8 +468,10 @@ function startApp(tab) {
   updateStore('visited', true);
 }
 
+const STUDY_LK_ORDER=['basics','shiwake','kamoku','deposit','cashcontent','koguchi','kakeuri','tegata','kitte','kotei','mibarai','maebara','chosahyo','seizan','bspl','kessanuri'];
+
 function renderStudyTab(){
-  const lkOrder=['basics','shiwake','kamoku','deposit','cashcontent','koguchi','kakeuri','tegata','kitte','kotei','mibarai','maebara','chosahyo','seizan','bspl','kessanuri'];
+  const lkOrder=STUDY_LK_ORDER;
   const el=document.getElementById('studyList');
   el.innerHTML=lkOrder.map(lk=>{
     const lesson=lessons[lk];
@@ -1063,6 +1065,62 @@ function toggleStudyCard(lk,hd){
   const body=document.getElementById('scb-'+lk);
   body.classList.toggle('open');
   hd.classList.toggle('open');
+}
+
+function _stripTags(html){
+  const d=document.createElement('div');
+  d.innerHTML=html;
+  return d.textContent||d.innerText||'';
+}
+
+function _lessonMatchesQuery(lesson,q){
+  if(!q)return false;
+  const hit=s=>s&&s.includes(q);
+  if(hit(lesson.title))return true;
+  for(const s of(lesson.sections||[])){
+    if(hit(s.h)||hit(_stripTags(s.p||''))||hit(s.eg||''))return true;
+  }
+  for(const p of(lesson.practice||[])){
+    if(hit(p.q)||hit(p.exp)||(p.opts||[]).some(o=>hit(o)))return true;
+  }
+  return false;
+}
+
+function searchStudy(){
+  const q=document.getElementById('studySearchInput').value.trim();
+  const msg=document.getElementById('studySearchMsg');
+  if(!q){clearStudySearch();return;}
+  let found=0;
+  STUDY_LK_ORDER.forEach(lk=>{
+    const lesson=lessons[lk];
+    const card=document.getElementById('sc-'+lk);
+    if(!card)return;
+    const body=document.getElementById('scb-'+lk);
+    const hd=card.querySelector('.study-card-hd');
+    if(_lessonMatchesQuery(lesson,q)){
+      found++;
+      card.style.display='';
+      body.classList.add('open');
+      hd.classList.add('open');
+    }else{
+      card.style.display='none';
+    }
+  });
+  if(found===0){
+    msg.textContent='該当項目が存在しません';
+    msg.style.display='block';
+  }else{
+    msg.style.display='none';
+  }
+}
+
+function clearStudySearch(){
+  const msg=document.getElementById('studySearchMsg');
+  if(msg)msg.style.display='none';
+  STUDY_LK_ORDER.forEach(lk=>{
+    const card=document.getElementById('sc-'+lk);
+    if(card)card.style.display='';
+  });
 }
 
 init();
