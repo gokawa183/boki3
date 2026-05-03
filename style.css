@@ -192,7 +192,7 @@
   /* 基礎学習 検索バー */
   .study-search-bar{display:flex;gap:8px;margin-bottom:14px;}
   .study-search-input{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:6px;
-    font-size:1rem;outline:none;transition:border-color .2s;}
+    font-size:16px;outline:none;transition:border-color .2s;}
   .study-search-input:focus{border-color:var(--accent);}
   .study-search-btn{padding:9px 18px;background:var(--accent);color:#fff;border:none;
     border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap;}
