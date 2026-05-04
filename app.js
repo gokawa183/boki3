@@ -486,7 +486,7 @@ function startApp(tab) {
   updateStore('visited', true);
 }
 
-const STUDY_LK_ORDER=['basics','shiwake','kamoku','deposit','cashcontent','koguchi','kakeuri','tegata','kitte','kotei','mibarai','maebara','soukanjo','chosahyo','seizan','bspl','kessanuri'];
+const STUDY_LK_ORDER=['basics','shiwake','kamoku','deposit','cashcontent','koguchi','kakeuri','tegata','kitte','kotei','mibarai','maebara','soukanjo','hojobo','chosahyo','seizan','bspl','kessanuri'];
 
 function renderStudyTab(){
   const lkOrder=STUDY_LK_ORDER;

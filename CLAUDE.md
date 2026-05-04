@@ -53,9 +53,14 @@ git push origin main
 
 カテゴリ: `'現金・預金'` / `'売掛買掛'` / `'固定資産'` / `'決算整理'` / `'その他'`
 
-### `lessons`（基礎学習 15テーマ）
+### `lessons`（基礎学習 18テーマ）
 
-キー例: `'deposit'`, `'cashcontent'`, `'koguchi'`, `'kakeuri'`, `'kotei'`, `'mibarai'`, `'soukanjo'` …
+`STUDY_LK_ORDER`（app.js）で表示順を管理:
+```
+'basics','shiwake','kamoku','deposit','cashcontent','koguchi',
+'kakeuri','tegata','kitte','kotei','mibarai','maebara',
+'soukanjo','hojobo','chosahyo','seizan','bspl','kessanuri'
+```
 
 各レッスン: `{ title, sections:[{h,p,eg}], practice:[{q,opts,ans,exp}] }`
 
@@ -66,6 +71,10 @@ git push origin main
 ### `QUIZ_COUNT`
 
 1セッションの出題数（デフォルト `10`）。
+
+### `LEDGER_PROBLEMS`（app.js）
+
+元帳練習タブ用の問題データ配列。各問題に T字勘定の行データと正解値を持つ。
 
 ## タブ構成
 
@@ -78,6 +87,7 @@ git push origin main
 | `study` | 基礎学習 |
 | `exam` | 試験対策 |
 | `q2study` | 第2問対策 |
+| `ledger` | 元帳練習 |
 | `q3study` | 第3問対策 |
 | `kessan` | 決算対策 |
 | `mock` | 模擬試験 |
@@ -103,7 +113,8 @@ const useCloudStorage = window.storage && typeof window.storage.get === 'functio
 | `loadQs()` | カテゴリフィルタ後にランダム10問選出 |
 | `renderQ()` | 現在の問題を描画 |
 | `pick(i)` | 選択肢クリック・正誤判定・stats更新 |
-| `renderStudyTab()` | 基礎学習タブ全体を描画 |
+| `renderStudyTab()` | 基礎学習タブ全体を描画（`STUDY_LK_ORDER` 順） |
+| `initLedgerTab()` | 元帳練習タブを初期化・描画 |
 | `startMock()` | 模擬試験開始（60分タイマー） |
 | `submitMock()` | 模擬試験採点・結果表示 |
 | `checkKessan(no,correct,ansId,resId,expId)` | 決算対策の入力問題を採点 |
