@@ -353,17 +353,28 @@
   .ldg-ok{background:var(--cl);color:var(--cg);}
   .ldg-ng{background:var(--wl);color:var(--wg);}
   /* リリースノート */
-  .rn-intro{font-size:.85rem;color:#666;margin-bottom:16px;}
-  .rn-list{display:flex;flex-direction:column;gap:14px;}
-  .rn-card{background:#fff;border:1px solid var(--border);border-radius:8px;
-    padding:16px 18px;box-shadow:2px 2px 6px var(--shadow);}
-  .rn-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-  .rn-date{font-size:.95rem;font-weight:700;color:var(--ink);}
-  .rn-label{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;}
-  .rn-label-new{background:var(--accent);color:#fff;}
-  .rn-items{margin:0 0 12px 0;padding-left:1.4em;list-style:none;}
-  .rn-items li{font-size:.86rem;line-height:1.75;padding:1px 0;}
-  .rn-items li::before{content:"・";margin-left:-1.2em;margin-right:.2em;color:var(--accent2);}
-  .rn-tags{display:flex;flex-wrap:wrap;gap:6px;}
-  .rn-tag{font-size:.75rem;padding:2px 10px;border-radius:10px;
+  .rn-intro{font-size:.84rem;color:#666;margin-bottom:16px;}
+  .rn-list{display:flex;flex-direction:column;gap:10px;}
+  .rn-entry{background:#fff;border-radius:8px;padding:14px 16px;
+    border-left:4px solid #ccc;border-top:1px solid var(--border);
+    border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+    box-shadow:1px 2px 5px var(--shadow);}
+  .rn-add{border-left-color:var(--accent2);}
+  .rn-improve{border-left-color:#059669;}
+  .rn-fix{border-left-color:#d97706;}
+  .rn-init{border-left-color:#7c3aed;}
+  .rn-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+  .rn-no{font-size:.78rem;font-weight:700;color:#888;min-width:28px;}
+  .rn-date{font-size:.78rem;color:#999;}
+  .rn-badge{font-size:.7rem;font-weight:700;padding:1px 8px;border-radius:10px;}
+  .rn-add-badge{background:#dbeafe;color:#1d4ed8;}
+  .rn-improve-badge{background:#d1fae5;color:#065f46;}
+  .rn-fix-badge{background:#fef3c7;color:#92400e;}
+  .rn-init-badge{background:#ede9fe;color:#5b21b6;}
+  .rn-new-label{font-size:.7rem;font-weight:700;padding:1px 8px;border-radius:10px;
+    background:var(--accent);color:#fff;}
+  .rn-title{font-size:.92rem;font-weight:700;color:var(--ink);margin-bottom:4px;}
+  .rn-desc{font-size:.82rem;color:#555;line-height:1.65;margin-bottom:8px;}
+  .rn-tags{display:flex;flex-wrap:wrap;gap:5px;}
+  .rn-tag{font-size:.72rem;padding:1px 9px;border-radius:10px;
     background:#eef4ff;color:var(--accent2);border:1px solid #c5d9f8;font-weight:600;}
