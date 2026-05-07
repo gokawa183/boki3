@@ -51,6 +51,7 @@
   <button class="tab" onclick="showTab('mock',this)">🏆 模擬試験</button>
   <button class="tab" onclick="showTab('reference',this)">📚 用語集</button>
   <button class="tab" onclick="showTab('journal',this)">📒 仕訳辞典</button>
+  <button class="tab" onclick="showTab('release',this)">📋 リリースノート</button>
 </div>
 
 <!-- QUIZ -->
@@ -862,6 +863,73 @@
 <div id="tab-journal" class="main hidden">
   <div class="sec-hd"><span class="badge">仕訳</span><span class="sec-ttl">頻出仕訳パターン辞典</span></div>
   <div id="journalList"></div>
+</div>
+
+<!-- RELEASE NOTES -->
+<div id="tab-release" class="main hidden">
+  <div class="sec-hd"><span class="badge">NEW</span><span class="sec-ttl">リリースノート</span></div>
+  <p class="rn-intro">アプリの更新履歴です。新しいリリースが上に表示されます。</p>
+  <div class="rn-list">
+
+    <div class="rn-card">
+      <div class="rn-header">
+        <span class="rn-date">2026-05-07</span>
+        <span class="rn-label rn-label-new">最新</span>
+      </div>
+      <ul class="rn-items">
+        <li>📋 <strong>リリースノートタブ</strong>を新設（本タブ）</li>
+        <li>⚠️ <strong>貸倒引当金と差額補充法</strong>レッスンを追加（繰入・戻入の判定、貸倒損失、償却債権取立益）</li>
+        <li>📚 <strong>基礎学習タブをおすすめ学習順に並び替え</strong>、上部に案内バナーを追加</li>
+        <li>📒 <strong>元帳練習タブに補助簿系問題を6問追加</strong>（得意先元帳・仕入先元帳・商品有高帳(先入先出法/移動平均法)・小口現金出納帳・受取手形記入帳）</li>
+        <li>🧾 <strong>前払金</strong>レッスンを追加（手付金の仕訳・商品到着時の充当・前払費用との違い）</li>
+        <li>📈 <strong>売買目的有価証券</strong>レッスンを追加（購入・売却益/損・期末時価評価）</li>
+      </ul>
+      <div class="rn-tags">
+        <span class="rn-tag">基礎学習</span>
+        <span class="rn-tag">元帳練習</span>
+        <span class="rn-tag">練習問題</span>
+      </div>
+    </div>
+
+    <div class="rn-card">
+      <div class="rn-header">
+        <span class="rn-date">2026-05-04</span>
+      </div>
+      <ul class="rn-items">
+        <li>📒 <strong>元帳練習タブの問題を全面刷新・拡充</strong>（損益振替・決算整理・固定資産売却・不明金額逆算など25問体制）</li>
+        <li>📚 <strong>補助簿</strong>レッスンを基礎学習に追加（主要簿・補助記入帳・補助元帳・商品有高帳）</li>
+        <li>📒 <strong>総勘定元帳</strong>レッスンの練習問題を複合問題に刷新</li>
+      </ul>
+      <div class="rn-tags">
+        <span class="rn-tag">基礎学習</span>
+        <span class="rn-tag">元帳練習</span>
+      </div>
+    </div>
+
+    <div class="rn-card">
+      <div class="rn-header">
+        <span class="rn-date">2026-05-03</span>
+      </div>
+      <ul class="rn-items">
+        <li>📒 <strong>元帳練習タブ</strong>を新規追加（総勘定元帳のT字勘定・金額補充練習）、成績タブに連動</li>
+        <li>📒 <strong>総勘定元帳</strong>レッスンを基礎学習に追加</li>
+        <li>🔍 <strong>基礎学習タブにキーワード検索機能</strong>を追加</li>
+        <li>📱 iOSでの入力欄タップ時のズーム問題を修正</li>
+        <li>💴 <strong>小口現金</strong>レッスンと練習問題を追加</li>
+        <li>📝 <strong>練習問題を120問 → 150問に増加</strong>（各カテゴリ6問追加）</li>
+        <li>🔧 練習問題の重複・語句誤り・解説誤りを修正</li>
+        <li>🗂️ <strong>初期リリース</strong>：単一HTMLファイルを index.html / style.css / data.js / app.js に分割</li>
+      </ul>
+      <div class="rn-tags">
+        <span class="rn-tag">全タブ</span>
+        <span class="rn-tag">基礎学習</span>
+        <span class="rn-tag">練習問題</span>
+        <span class="rn-tag">元帳練習</span>
+        <span class="rn-tag">成績</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 </div><!-- /app-area -->

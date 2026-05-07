@@ -369,7 +369,7 @@ function buildRows(d,c){
 }
 
 function showTab(tab,el){
-  ['quiz','stats','study','exam','mock','q2study','q3study','kessan','reference','journal','ledger'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+  ['quiz','stats','study','exam','mock','q2study','q3study','kessan','reference','journal','ledger','release'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
   document.getElementById('tab-'+tab).classList.remove('hidden');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   if(el)el.classList.add('active');

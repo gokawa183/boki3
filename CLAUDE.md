@@ -144,4 +144,5 @@ const useCloudStorage = window.storage && typeof window.storage.get === 'functio
 
 1. 原因を見つけて修正する
 2. 修正内容を CLAUDE.md に反映させる
-3. GitHub にプッシュする（`git add` → `git commit` → `git push origin master:main`）
+3. `index.html` の `tab-release`（リリースノートタブ）を更新する（最新エントリを先頭に追加、日付・変更内容・影響ページを記載）
+4. GitHub にプッシュする（`git add` → `git commit` → `git push origin master:main`）
