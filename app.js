@@ -228,7 +228,6 @@ function updateProgress(){
   document.getElementById('cCnt').textContent=correct;
   document.getElementById('wCnt').textContent=wrong;
   const done=correct+wrong;
-  document.getElementById('scoreDisp').textContent=done>0?Math.round(correct/done*100)+'%':'－';
 }
 
 function renderQ(){
