@@ -1402,4 +1402,215 @@ async function checkLedger(){
   await recordResult('総勘定元帳',isOk);
 }
 
+/* ════════════════════════════════════════
+   第3問 練習問題データ
+════════════════════════════════════════ */
+const Q3_PROBLEMS = [
+  {
+    no:1, title:'売上原価の算定', diff:'★',
+    pre:'繰越商品：80,000円　／　仕入：500,000円',
+    adjs:['期末商品棚卸高は 100,000円 である'],
+    qs:[
+      {label:'決算整理後の「仕入」（売上原価）',ans:480000,exp:'期首(80,000) ＋ 仕入(500,000) − 期末(100,000) ＝ 480,000円'},
+      {label:'決算整理後の「繰越商品」',ans:100000,exp:'期末商品棚卸高がそのまま繰越商品の残高になります（100,000円）'},
+    ]
+  },
+  {
+    no:2, title:'減価償却費の計上', diff:'★',
+    pre:'建物：2,400,000円　／　建物減価償却累計額：480,000円\n備品：600,000円　／　備品減価償却累計額：240,000円',
+    adjs:[
+      '建物：定額法・耐用年数30年・残存価額0円',
+      '備品：定額法・耐用年数5年・残存価額0円',
+    ],
+    qs:[
+      {label:'当期の建物減価償却費',ans:80000,exp:'2,400,000 ÷ 30年 ＝ 80,000円'},
+      {label:'決算整理後の建物減価償却累計額',ans:560000,exp:'480,000 ＋ 80,000 ＝ 560,000円'},
+      {label:'当期の備品減価償却費',ans:120000,exp:'600,000 ÷ 5年 ＝ 120,000円'},
+      {label:'決算整理後の備品減価償却累計額',ans:360000,exp:'240,000 ＋ 120,000 ＝ 360,000円'},
+    ]
+  },
+  {
+    no:3, title:'貸倒引当金の設定', diff:'★',
+    pre:'売掛金：400,000円　／　貸倒引当金：5,000円',
+    adjs:['売掛金残高の2%を貸倒引当金に設定する（差額補充法）'],
+    qs:[
+      {label:'貸倒引当金の必要額',ans:8000,exp:'400,000 × 2% ＝ 8,000円'},
+      {label:'貸倒引当金繰入額（当期計上額）',ans:3000,exp:'必要額(8,000) − 既存残高(5,000) ＝ 3,000円'},
+      {label:'決算整理後の貸倒引当金残高',ans:8000,exp:'既存(5,000) ＋ 繰入(3,000) ＝ 8,000円'},
+    ]
+  },
+  {
+    no:4, title:'経過勘定の整理', diff:'★★',
+    pre:'支払保険料：36,000円（10月1日に1年分払い・決算3月31日）\n支払利息：20,000円\n受取家賃：48,000円',
+    adjs:[
+      '① 支払保険料の翌期分を前払費用として計上する',
+      '② 支払利息の未払分が 6,000円 ある',
+      '③ 受取家賃のうち翌期分が 12,000円 ある',
+    ],
+    qs:[
+      {label:'前払費用（前払保険料）の金額',ans:18000,exp:'10月1日〜翌9月30日が1年分。翌期分は4〜9月の6ヶ月。36,000 ÷ 12 × 6 ＝ 18,000円'},
+      {label:'決算整理後の「支払保険料」',ans:18000,exp:'36,000 − 前払(18,000) ＝ 18,000円'},
+      {label:'未払費用（未払利息）の金額',ans:6000,exp:'問題文の通り 6,000円（負債として貸方に計上）'},
+      {label:'決算整理後の「支払利息」',ans:26000,exp:'20,000 ＋ 未払(6,000) ＝ 26,000円'},
+      {label:'前受収益（前受家賃）の金額',ans:12000,exp:'問題文の通り 12,000円（負債として貸方に計上）'},
+      {label:'決算整理後の「受取家賃」',ans:36000,exp:'48,000 − 前受(12,000) ＝ 36,000円'},
+    ]
+  },
+  {
+    no:5, title:'複合問題（売上原価・貸倒・減価償却）', diff:'★★',
+    pre:'繰越商品：60,000円　／　仕入：450,000円\n売掛金：300,000円　／　貸倒引当金：2,000円\n備品：480,000円　／　備品減価償却累計額：192,000円',
+    adjs:[
+      '① 期末商品棚卸高は 75,000円 である',
+      '② 売掛金残高の2%を貸倒引当金に設定する（差額補充法）',
+      '③ 備品：定額法・耐用年数5年・残存価額0円',
+    ],
+    qs:[
+      {label:'決算整理後の「仕入」（売上原価）',ans:435000,exp:'期首(60,000) ＋ 仕入(450,000) − 期末(75,000) ＝ 435,000円'},
+      {label:'決算整理後の「繰越商品」',ans:75000,exp:'期末商品棚卸高 75,000円'},
+      {label:'貸倒引当金繰入額',ans:4000,exp:'必要額(300,000×2%=6,000) − 既存(2,000) ＝ 4,000円'},
+      {label:'決算整理後の「貸倒引当金」残高',ans:6000,exp:'既存(2,000) ＋ 繰入(4,000) ＝ 6,000円'},
+      {label:'当期の備品減価償却費',ans:96000,exp:'480,000 ÷ 5年 ＝ 96,000円'},
+      {label:'決算整理後の備品減価償却累計額',ans:288000,exp:'192,000 ＋ 96,000 ＝ 288,000円'},
+    ]
+  },
+  {
+    no:6, title:'複合問題（経過勘定・消耗品・法人税等）', diff:'★★★',
+    pre:'支払家賃：180,000円（12月1日に1年分払い・決算3月31日）\n受取手数料：42,000円\n消耗品費：28,000円',
+    adjs:[
+      '① 支払家賃の翌期分を前払費用として計上する',
+      '② 受取手数料の未収分が 9,000円 ある',
+      '③ 消耗品の期末未使用分が 10,000円 ある',
+      '④ 法人税等 75,000円 を計上する（中間納付なし）',
+    ],
+    qs:[
+      {label:'前払費用（前払家賃）の金額',ans:120000,exp:'12月1日〜翌11月30日が1年分。当期分は12〜3月(4ヶ月)、翌期分は4〜11月(8ヶ月)。180,000 ÷ 12 × 8 ＝ 120,000円'},
+      {label:'決算整理後の「支払家賃」',ans:60000,exp:'180,000 − 前払(120,000) ＝ 60,000円'},
+      {label:'未収収益（未収手数料）の金額',ans:9000,exp:'問題文の通り 9,000円（資産として借方に計上）'},
+      {label:'決算整理後の「受取手数料」',ans:51000,exp:'42,000 ＋ 未収(9,000) ＝ 51,000円'},
+      {label:'消耗品（資産）の期末残高',ans:10000,exp:'期末未使用分10,000円を消耗品費から消耗品（資産）へ振り替えます'},
+      {label:'決算整理後の「消耗品費」',ans:18000,exp:'28,000 − 未使用(10,000) ＝ 18,000円'},
+      {label:'法人税等の金額',ans:75000,exp:'問題文の通り75,000円（費用として借方に計上）'},
+      {label:'未払法人税等の金額',ans:75000,exp:'中間納付なしのため全額が未払法人税等（負債・貸方）になります'},
+    ]
+  },
+];
+
+let q3pIdx = 0;
+
+function initQ3Practice(){
+  q3pIdx = 0;
+  renderQ3Problem();
+}
+
+function renderQ3Problem(){
+  const p = Q3_PROBLEMS[q3pIdx];
+  const area = document.getElementById('q3practice-inner');
+
+  const progHtml = Q3_PROBLEMS.map((_,i)=>
+    `<span style="width:24px;height:8px;border-radius:4px;background:${i===q3pIdx?'var(--accent)':i<q3pIdx?'var(--cg)':'var(--border)'};display:inline-block;margin:0 3px"></span>`
+  ).join('');
+
+  const adjsHtml = p.adjs.map(a=>
+    `<div style="background:var(--pale);border-radius:4px;padding:7px 11px;font-size:.8rem;margin-top:5px">・${a}</div>`
+  ).join('');
+
+  const qsHtml = p.qs.map((q,i)=>`
+    <div style="background:var(--pale);border-radius:5px;padding:10px 12px;margin-top:8px">
+      <div style="font-size:.8rem;font-weight:700;margin-bottom:7px">Q${i+1}. ${q.label}</div>
+      <label style="font-size:.79rem">答え：<input type="number" id="q3pi_${i}" style="width:130px;border:1.5px solid var(--accent2);border-radius:3px;padding:4px 7px;font-size:16px;text-align:right" placeholder="円"> 円</label>
+      <div id="q3pr_${i}" style="display:none;margin-top:7px;padding:6px 10px;border-radius:4px;font-size:.8rem;font-weight:700"></div>
+      <div id="q3pe_${i}" style="display:none;margin-top:5px;padding:7px 10px;background:#f0f4ff;border-radius:4px;font-size:.78rem;color:#444"></div>
+    </div>
+  `).join('');
+
+  area.innerHTML = `
+    <div style="text-align:center;margin-bottom:14px">${progHtml}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+      <span style="font-size:.88rem;font-weight:700">問${p.no} / ${Q3_PROBLEMS.length}　${p.title}</span>
+      <span style="font-size:.75rem;background:var(--pale);border-radius:10px;padding:2px 12px;color:#666">難易度 ${p.diff}</span>
+    </div>
+    <div style="background:#f8f4e8;border-left:3px solid var(--gold);border-radius:0 5px 5px 0;padding:10px 12px;font-size:.8rem;white-space:pre-line;margin-bottom:8px">【決算整理前残高（一部）】\n${p.pre}</div>
+    <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">【決算整理事項】</div>
+    ${adjsHtml}
+    <div style="margin-top:16px">
+      <div class="exam-section-title" style="margin-bottom:2px">📝 決算整理後の金額を求めなさい</div>
+      ${qsHtml}
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="mock-start-btn" style="width:auto;padding:9px 22px;font-size:.82rem" onclick="checkQ3Problem()">答え合わせ</button>
+      <button id="q3p-next-btn" class="mock-start-btn" style="display:none;width:auto;padding:9px 22px;font-size:.82rem;background:var(--accent2)" onclick="nextQ3Problem()"></button>
+      <button class="reset-btn" onclick="resetQ3Problem()">リセット</button>
+    </div>
+    <div id="q3p-msg" style="display:none;margin-top:12px;padding:10px 14px;border-radius:6px;font-size:.88rem;font-weight:700;text-align:center"></div>
+  `;
+}
+
+function checkQ3Problem(){
+  const p = Q3_PROBLEMS[q3pIdx];
+  let correct = 0;
+  p.qs.forEach((q,i)=>{
+    const val = parseInt(document.getElementById('q3pi_'+i).value);
+    const rEl = document.getElementById('q3pr_'+i);
+    const eEl = document.getElementById('q3pe_'+i);
+    if(val === q.ans){
+      correct++;
+      rEl.textContent = '✓ 正解！';
+      rEl.style.cssText = 'display:block;margin-top:7px;padding:6px 10px;border-radius:4px;font-size:.8rem;font-weight:700;background:#e8f5e9;color:#2e7d32';
+    } else {
+      rEl.textContent = `✗ 不正解（正解：${q.ans.toLocaleString()}円）`;
+      rEl.style.cssText = 'display:block;margin-top:7px;padding:6px 10px;border-radius:4px;font-size:.8rem;font-weight:700;background:#ffeaea;color:var(--accent)';
+    }
+    eEl.textContent = '解説：' + q.exp;
+    eEl.style.display = 'block';
+  });
+
+  const total = p.qs.length;
+  const msg = document.getElementById('q3p-msg');
+  const allOk = correct === total;
+  msg.textContent = `${correct} / ${total} 問正解${allOk ? '　🎉 全問正解！' : ''}`;
+  msg.style.cssText = `display:block;margin-top:12px;padding:10px 14px;border-radius:6px;font-size:.88rem;font-weight:700;text-align:center;background:${allOk?'#e8f5e9':'var(--pale)'};color:${allOk?'#2e7d32':'var(--ink)'}`;
+
+  const nextBtn = document.getElementById('q3p-next-btn');
+  nextBtn.textContent = q3pIdx < Q3_PROBLEMS.length - 1 ? '次の問題 →' : '結果を見る';
+  nextBtn.style.display = '';
+}
+
+function nextQ3Problem(){
+  q3pIdx++;
+  if(q3pIdx >= Q3_PROBLEMS.length){
+    showQ3Summary();
+  } else {
+    renderQ3Problem();
+    document.getElementById('q3practice-inner').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+function resetQ3Problem(){
+  const p = Q3_PROBLEMS[q3pIdx];
+  p.qs.forEach((_,i)=>{
+    const inp = document.getElementById('q3pi_'+i);
+    const rEl = document.getElementById('q3pr_'+i);
+    const eEl = document.getElementById('q3pe_'+i);
+    if(inp) inp.value = '';
+    if(rEl) rEl.style.display = 'none';
+    if(eEl) eEl.style.display = 'none';
+  });
+  const msg = document.getElementById('q3p-msg');
+  if(msg) msg.style.display = 'none';
+  const nextBtn = document.getElementById('q3p-next-btn');
+  if(nextBtn) nextBtn.style.display = 'none';
+}
+
+function showQ3Summary(){
+  const area = document.getElementById('q3practice-inner');
+  area.innerHTML = `
+    <div style="text-align:center;padding:24px 0">
+      <div style="font-size:2.2rem;margin-bottom:10px">🎓</div>
+      <div style="font-size:1rem;font-weight:700;margin-bottom:10px">全${Q3_PROBLEMS.length}問 完了！お疲れ様でした</div>
+      <p class="exam-p" style="color:#666;font-size:.85rem">苦手な問題はチェックリストや解説セクションで復習しましょう。</p>
+      <button class="mock-start-btn" style="width:auto;padding:10px 28px;margin-top:16px" onclick="initQ3Practice()">もう一度最初から</button>
+    </div>
+  `;
+}
+
 init();
