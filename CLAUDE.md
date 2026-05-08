@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |---------|------|---------|
 | `index.html` | HTMLシェル（タブ・静的コンテンツ・スクリプト参照） | 低 |
 | `style.css` | 全CSS（CSS変数・コンポーネント）| 低 |
-| `data.js` | 教育コンテンツデータ（問題・レッスン・仕訳）| **高** |
+| `data.js` | 教育コンテンツデータ（問題・レッスン）| **高** |
 | `app.js` | アプリロジック（UI・ストレージ・模擬試験）| 中 |
 | `CLAUDE.md` | このファイル | - |
 
@@ -65,10 +65,6 @@ git push origin main
 
 各レッスン: `{ title, sections:[{h,p,eg}], practice:[{q,opts,ans,exp}] }`
 
-### `journals`（仕訳辞典 47パターン）
-
-各エントリ: `{ group, title, d:[借方行], c:[貸方行], note }`
-
 ### `QUIZ_COUNT`
 
 1セッションの出題数（デフォルト `10`）。
@@ -93,7 +89,6 @@ git push origin main
 | `kessan` | 決算対策 |
 | `mock` | 模擬試験 |
 | `reference` | 用語集 |
-| `journal` | 仕訳辞典 |
 | `release` | リリースノート |
 
 ## ストレージ（app.js）
