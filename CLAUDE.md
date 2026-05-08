@@ -85,8 +85,7 @@ git push origin main
 | `exam` | 試験対策 |
 | `q2study` | 第2問対策 |
 | `ledger` | 元帳練習 |
-| `q3study` | 第3問対策 |
-| `kessan` | 決算対策 |
+| `q3study` | 第3問対策（決算整理・試算表・精算表） |
 | `mock` | 模擬試験 |
 | `reference` | 用語集 |
 | `release` | リリースノート |
