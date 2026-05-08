@@ -177,12 +177,14 @@ async function init(){
       if(el) el.classList.add('hidden');
     });
 
-  // ストレージからデータを復元（失敗しても続行）
-  try { await initStore(); } catch(e) {}
-
+  // 問題・チップ・仕訳辞典は同期データのみ依存するため、ストレージ待機前に初期化
   const pool = rawQs.length;
   document.getElementById('poolSize').textContent = pool;
   renderChips(); loadQs(); renderJournals();
+
+  // ストレージからデータを復元（失敗しても続行）
+  try { await initStore(); } catch(e) {}
+
 
   // visited フラグを確認
   let visited = false;
@@ -375,6 +377,7 @@ function showTab(tab,el){
   if(tab==='stats')renderStats();
   if(tab==='study')renderStudyTab();
   if(tab==='ledger')initLedgerTab();
+  if(tab==='quiz'){const qa=document.getElementById('quizArea');if(qa&&!qa.hasChildNodes())loadQs();}
 }
 
 // ===== 決算対策 採点関数 =====

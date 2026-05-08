@@ -53,13 +53,14 @@ git push origin main
 
 カテゴリ: `'現金・預金'` / `'売掛買掛'` / `'固定資産'` / `'決算整理'` / `'その他'`
 
-### `lessons`（基礎学習 18テーマ）
+### `lessons`（基礎学習 21テーマ）
 
 `STUDY_LK_ORDER`（app.js）で表示順を管理:
 ```
-'basics','shiwake','kamoku','deposit','cashcontent','koguchi',
-'kakeuri','tegata','kitte','kotei','mibarai','maebara',
-'soukanjo','hojobo','chosahyo','seizan','bspl','kessanuri'
+'basics','shiwake','kamoku','bspl','deposit','cashcontent','koguchi',
+'kakeuri','kashidaore','maekin','kitte','tegata','yuka',
+'kotei','mibarai','maebara','kessanuri',
+'soukanjo','hojobo','chosahyo','seizan'
 ```
 
 各レッスン: `{ title, sections:[{h,p,eg}], practice:[{q,opts,ans,exp}] }`
@@ -93,6 +94,7 @@ git push origin main
 | `mock` | 模擬試験 |
 | `reference` | 用語集 |
 | `journal` | 仕訳辞典 |
+| `release` | リリースノート |
 
 ## ストレージ（app.js）
 
