@@ -650,6 +650,333 @@
       </p>
     </div>
   </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">📝 総合練習：決算整理後残高試算表の作成</div>
+    <div class="exam-card-body">
+      <p class="exam-p">次の残高試算表（決算整理前）と決算整理事項にもとづき、決算整理後残高試算表の<span style="background:var(--cl);padding:1px 5px;border-radius:3px;font-size:.82rem">空欄</span>に金額を記入しなさい。</p>
+
+      <div class="exam-section-title" style="margin-top:12px">残高試算表（決算整理前）×1年3月31日現在</div>
+      <div style="overflow-x:auto;margin-top:6px">
+        <table class="mock-fill-table">
+          <thead>
+            <tr><th style="width:38%">借方金額</th><th>勘定科目</th><th style="width:38%">貸方金額</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="text-align:right">280,000</td><td>現金</td><td></td></tr>
+            <tr><td style="text-align:right">400,000</td><td>売掛金</td><td></td></tr>
+            <tr><td style="text-align:right">60,000</td><td>繰越商品</td><td></td></tr>
+            <tr><td style="text-align:right">600,000</td><td>備品</td><td></td></tr>
+            <tr><td></td><td>貸倒引当金</td><td style="text-align:right">4,000</td></tr>
+            <tr><td></td><td>備品減価償却累計額</td><td style="text-align:right">200,000</td></tr>
+            <tr><td></td><td>買掛金</td><td style="text-align:right">260,000</td></tr>
+            <tr><td></td><td>資本金</td><td style="text-align:right">1,000,000</td></tr>
+            <tr><td></td><td>繰越利益剰余金</td><td style="text-align:right">136,000</td></tr>
+            <tr><td></td><td>売上</td><td style="text-align:right">600,000</td></tr>
+            <tr><td style="text-align:right">500,000</td><td>仕入</td><td></td></tr>
+            <tr><td style="text-align:right">240,000</td><td>給料</td><td></td></tr>
+            <tr><td style="text-align:right">24,000</td><td>支払保険料</td><td></td></tr>
+            <tr><td style="text-align:right">96,000</td><td>支払家賃</td><td></td></tr>
+            <tr style="border-top:2px solid var(--ink);font-weight:700"><td style="text-align:right">2,200,000</td><td>合計</td><td style="text-align:right">2,200,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="exam-section-title" style="margin-top:12px">決算整理事項</div>
+      <ol style="font-size:.8rem;margin:8px 0 0 18px;line-height:2.1">
+        <li>期末商品棚卸高：80,000円</li>
+        <li>売掛金残高の2%を貸倒引当金として設定する（差額補充法）</li>
+        <li>備品は定額法で減価償却する（耐用年数5年・残存価額0円）</li>
+        <li>支払保険料のうち12,000円は翌期分の前払いである</li>
+        <li>当期分の給料未払額が20,000円ある</li>
+      </ol>
+
+      <div class="exam-section-title" style="margin-top:14px">決算整理後残高試算表（×1年3月31日現在）</div>
+      <p style="font-size:.72rem;color:var(--accent2);margin:4px 0 6px">※ 色付きセルに金額を入力（円単位の数字のみ）</p>
+      <div style="overflow-x:auto">
+        <table class="mock-fill-table">
+          <thead>
+            <tr><th style="width:38%">借方金額</th><th>勘定科目</th><th style="width:38%">貸方金額</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="text-align:right">280,000</td><td>現金</td><td></td></tr>
+            <tr><td style="text-align:right">400,000</td><td>売掛金</td><td></td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p1" placeholder="繰越商品"></td><td>繰越商品</td><td></td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p2" placeholder="前払費用（新）"></td><td>前払費用</td><td></td></tr>
+            <tr><td style="text-align:right">600,000</td><td>備品</td><td></td></tr>
+            <tr><td></td><td>貸倒引当金</td><td class="fill-cell"><input type="number" id="q3p3" placeholder="引当金残高"></td></tr>
+            <tr><td></td><td>備品減価償却累計額</td><td class="fill-cell"><input type="number" id="q3p4" placeholder="累計額"></td></tr>
+            <tr><td></td><td>未払費用</td><td class="fill-cell"><input type="number" id="q3p5" placeholder="未払費用（新）"></td></tr>
+            <tr><td></td><td>買掛金</td><td style="text-align:right">260,000</td></tr>
+            <tr><td></td><td>資本金</td><td style="text-align:right">1,000,000</td></tr>
+            <tr><td></td><td>繰越利益剰余金</td><td style="text-align:right">136,000</td></tr>
+            <tr><td></td><td>売上</td><td style="text-align:right">600,000</td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p6" placeholder="売上原価"></td><td>仕入</td><td></td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p7" placeholder="給料"></td><td>給料</td><td></td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p8" placeholder="保険料（整理後）"></td><td>支払保険料</td><td></td></tr>
+            <tr><td style="text-align:right">96,000</td><td>支払家賃</td><td></td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p9" placeholder="償却費（新）"></td><td>減価償却費</td><td></td></tr>
+            <tr><td class="fill-cell"><input type="number" id="q3p10" placeholder="繰入額（新）"></td><td>貸倒引当金繰入</td><td></td></tr>
+            <tr style="border-top:2px solid var(--ink);font-weight:700"><td style="text-align:right">2,344,000</td><td>合計</td><td style="text-align:right">2,344,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="mock-start-btn" style="width:auto;padding:9px 22px;font-size:.8rem" onclick="checkQ3Practice()">答え合わせ</button>
+        <button class="reset-btn" onclick="resetQ3Practice()">リセット</button>
+      </div>
+      <div id="q3p-score" style="display:none;margin-top:10px;font-size:.9rem;font-weight:700;padding:10px 14px;border-radius:5px;background:var(--pale)"></div>
+      <div id="q3p-exp" class="exam-note" style="display:none;margin-top:10px;line-height:2">
+        <div style="font-weight:700;color:var(--gold);font-size:.72rem;letter-spacing:.08em;margin-bottom:6px">【解説】</div>
+        <strong>① 売上原価の算定（仕入勘定）</strong><br>
+        　期首60,000 ＋ 当期仕入500,000 − 期末80,000 ＝ <strong style="color:var(--accent2)">480,000円</strong><br>
+        　繰越商品 → 期末商品棚卸高 ＝ <strong style="color:var(--accent2)">80,000円</strong><br><br>
+        <strong>② 貸倒引当金の設定</strong><br>
+        　設定額：400,000 × 2% ＝ 8,000円<br>
+        　繰入額：8,000 − 既存4,000 ＝ <strong style="color:var(--accent2)">4,000円</strong>（貸倒引当金繰入）<br>
+        　残高：4,000 ＋ 4,000 ＝ <strong style="color:var(--accent2)">8,000円</strong>（貸倒引当金）<br><br>
+        <strong>③ 減価償却費の計上</strong><br>
+        　600,000 ÷ 5年 ＝ <strong style="color:var(--accent2)">120,000円</strong>（減価償却費）<br>
+        　累計額：200,000 ＋ 120,000 ＝ <strong style="color:var(--accent2)">320,000円</strong>（備品減価償却累計額）<br><br>
+        <strong>④ 前払保険料の計上</strong><br>
+        　前払費用：<strong style="color:var(--accent2)">12,000円</strong>（翌期分を資産に振替）<br>
+        　支払保険料：24,000 − 12,000 ＝ <strong style="color:var(--accent2)">12,000円</strong>（当期分のみ）<br><br>
+        <strong>⑤ 給料未払分の計上</strong><br>
+        　未払費用：<strong style="color:var(--accent2)">20,000円</strong>（負債に計上）<br>
+        　給料：240,000 ＋ 20,000 ＝ <strong style="color:var(--accent2)">260,000円</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-card">
+    <div class="exam-card-hd">📊 総合練習：精算表の作成</div>
+    <div class="exam-card-body">
+      <p class="exam-p">次の残高試算表（決算整理前）と決算整理事項にもとづき、精算表の<span style="background:var(--cl);padding:1px 5px;border-radius:3px;font-size:.82rem">空欄</span>に金額を記入しなさい。</p>
+
+      <div class="exam-section-title" style="margin-top:12px">残高試算表（決算整理前）×1年3月31日現在</div>
+      <div style="overflow-x:auto;margin-top:6px">
+        <table class="mock-fill-table" style="font-size:.76rem">
+          <thead><tr><th style="width:40%">借方金額</th><th>勘定科目</th><th style="width:40%">貸方金額</th></tr></thead>
+          <tbody>
+            <tr><td style="text-align:right">180,000</td><td>現金</td><td></td></tr>
+            <tr><td style="text-align:right">320,000</td><td>売掛金</td><td></td></tr>
+            <tr><td style="text-align:right">56,000</td><td>繰越商品</td><td></td></tr>
+            <tr><td style="text-align:right">600,000</td><td>備品</td><td></td></tr>
+            <tr><td></td><td>貸倒引当金</td><td style="text-align:right">3,200</td></tr>
+            <tr><td></td><td>備品減価償却累計額</td><td style="text-align:right">240,000</td></tr>
+            <tr><td></td><td>買掛金</td><td style="text-align:right">240,000</td></tr>
+            <tr><td></td><td>資本金</td><td style="text-align:right">500,000</td></tr>
+            <tr><td></td><td>繰越利益剰余金</td><td style="text-align:right">8,800</td></tr>
+            <tr><td></td><td>売上</td><td style="text-align:right">1,200,000</td></tr>
+            <tr><td style="text-align:right">700,000</td><td>仕入</td><td></td></tr>
+            <tr><td style="text-align:right">240,000</td><td>給料</td><td></td></tr>
+            <tr><td style="text-align:right">72,000</td><td>支払家賃</td><td></td></tr>
+            <tr><td style="text-align:right">24,000</td><td>支払保険料</td><td></td></tr>
+            <tr style="border-top:2px solid var(--ink);font-weight:700"><td style="text-align:right">2,192,000</td><td>合計</td><td style="text-align:right">2,192,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="exam-section-title" style="margin-top:12px">決算整理事項</div>
+      <ol style="font-size:.8rem;margin:8px 0 0 18px;line-height:2.1">
+        <li>期末商品棚卸高：64,000円</li>
+        <li>売掛金残高の2%を貸倒引当金として設定する（差額補充法）</li>
+        <li>備品は定額法で減価償却する（耐用年数5年・残存価額0円）</li>
+        <li>支払保険料のうち8,000円は翌期分の前払いである</li>
+        <li>当期分の給料未払額が20,000円ある</li>
+      </ol>
+
+      <div class="exam-section-title" style="margin-top:14px">精算表（×1年3月31日現在）</div>
+      <p style="font-size:.72rem;color:var(--accent2);margin:4px 0 6px">※ 色付きセルに金額を入力（円単位の数字のみ）／ 仕入の決算整理欄は参考値として記載済み</p>
+      <div style="overflow-x:auto">
+        <table class="mock-fill-table" style="min-width:720px;font-size:.72rem">
+          <thead>
+            <tr>
+              <th style="min-width:100px;text-align:left;padding:5px 6px">勘定科目</th>
+              <th colspan="2" style="text-align:center">残高試算表</th>
+              <th colspan="2" style="text-align:center">決算整理</th>
+              <th colspan="2" style="text-align:center">損益計算書</th>
+              <th colspan="2" style="text-align:center">貸借対照表</th>
+            </tr>
+            <tr style="font-size:.65rem;background:#444;color:#ddd">
+              <th></th>
+              <th style="padding:3px 4px">借方</th><th style="padding:3px 4px">貸方</th>
+              <th style="padding:3px 4px">借方</th><th style="padding:3px 4px">貸方</th>
+              <th style="padding:3px 4px">借方</th><th style="padding:3px 4px">貸方</th>
+              <th style="padding:3px 4px">借方</th><th style="padding:3px 4px">貸方</th>
+            </tr>
+          </thead>
+          <tbody style="font-size:.72rem">
+            <tr>
+              <td style="padding:3px 5px">現金</td>
+              <td style="text-align:right;padding:3px 5px">180,000</td><td></td>
+              <td></td><td></td><td></td><td></td>
+              <td style="text-align:right;padding:3px 5px">180,000</td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">売掛金</td>
+              <td style="text-align:right;padding:3px 5px">320,000</td><td></td>
+              <td></td><td></td><td></td><td></td>
+              <td style="text-align:right;padding:3px 5px">320,000</td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">繰越商品</td>
+              <td style="text-align:right;padding:3px 5px">56,000</td><td></td>
+              <td class="fill-cell"><input type="number" id="sp1" placeholder="期末"></td>
+              <td class="fill-cell"><input type="number" id="sp2" placeholder="期首"></td>
+              <td></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp3" placeholder=""></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">前払費用</td>
+              <td></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp4" placeholder="前払分"></td><td></td>
+              <td></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp5" placeholder=""></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">備品</td>
+              <td style="text-align:right;padding:3px 5px">600,000</td><td></td>
+              <td></td><td></td><td></td><td></td>
+              <td style="text-align:right;padding:3px 5px">600,000</td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">貸倒引当金</td>
+              <td></td><td style="text-align:right;padding:3px 5px">3,200</td>
+              <td></td><td class="fill-cell"><input type="number" id="sp6" placeholder="繰入"></td>
+              <td></td><td></td>
+              <td></td><td class="fill-cell"><input type="number" id="sp7" placeholder="残高"></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px;white-space:nowrap">備品減価償却累計額</td>
+              <td></td><td style="text-align:right;padding:3px 5px">240,000</td>
+              <td></td><td class="fill-cell"><input type="number" id="sp8" placeholder="当期分"></td>
+              <td></td><td></td>
+              <td></td><td class="fill-cell"><input type="number" id="sp9" placeholder="累計"></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">未払費用</td>
+              <td></td><td></td>
+              <td></td><td class="fill-cell"><input type="number" id="sp10" placeholder="未払分"></td>
+              <td></td><td></td>
+              <td></td><td class="fill-cell"><input type="number" id="sp11" placeholder=""></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">買掛金</td>
+              <td></td><td style="text-align:right;padding:3px 5px">240,000</td>
+              <td></td><td></td><td></td><td></td>
+              <td></td><td style="text-align:right;padding:3px 5px">240,000</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">資本金</td>
+              <td></td><td style="text-align:right;padding:3px 5px">500,000</td>
+              <td></td><td></td><td></td><td></td>
+              <td></td><td style="text-align:right;padding:3px 5px">500,000</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">繰越利益剰余金</td>
+              <td></td><td style="text-align:right;padding:3px 5px">8,800</td>
+              <td></td><td></td><td></td><td></td>
+              <td></td><td style="text-align:right;padding:3px 5px">8,800</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">売上</td>
+              <td></td><td style="text-align:right;padding:3px 5px">1,200,000</td>
+              <td></td><td></td>
+              <td></td><td style="text-align:right;padding:3px 5px">1,200,000</td>
+              <td></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">仕入</td>
+              <td style="text-align:right;padding:3px 5px">700,000</td><td></td>
+              <td style="text-align:right;padding:3px 5px;color:#888;font-size:.68rem">56,000</td>
+              <td style="text-align:right;padding:3px 5px;color:#888;font-size:.68rem">64,000</td>
+              <td class="fill-cell"><input type="number" id="sp12" placeholder="売上原価"></td><td></td>
+              <td></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">給料</td>
+              <td style="text-align:right;padding:3px 5px">240,000</td><td></td>
+              <td class="fill-cell"><input type="number" id="sp13" placeholder="未払分"></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp14" placeholder="給料計"></td><td></td>
+              <td></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">支払家賃</td>
+              <td style="text-align:right;padding:3px 5px">72,000</td><td></td>
+              <td></td><td></td>
+              <td style="text-align:right;padding:3px 5px">72,000</td><td></td>
+              <td></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">支払保険料</td>
+              <td style="text-align:right;padding:3px 5px">24,000</td><td></td>
+              <td></td><td class="fill-cell"><input type="number" id="sp15" placeholder="前払分"></td>
+              <td class="fill-cell"><input type="number" id="sp16" placeholder="保険料計"></td><td></td>
+              <td></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">減価償却費</td>
+              <td></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp17" placeholder="償却費"></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp18" placeholder=""></td><td></td>
+              <td></td><td></td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px">貸倒引当金繰入</td>
+              <td></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp19" placeholder="繰入額"></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp20" placeholder=""></td><td></td>
+              <td></td><td></td>
+            </tr>
+            <tr style="border-top:2px solid var(--ink)">
+              <td style="padding:3px 5px;font-weight:700">当期純利益</td>
+              <td></td><td></td><td></td><td></td>
+              <td class="fill-cell"><input type="number" id="sp21" placeholder="純利益"></td><td></td>
+              <td></td><td class="fill-cell"><input type="number" id="sp22" placeholder="純利益"></td>
+            </tr>
+            <tr style="border-top:2px solid var(--ink);font-weight:700;background:var(--pale)">
+              <td style="padding:4px 5px">合計</td>
+              <td style="text-align:right;padding:4px 5px">2,192,000</td><td style="text-align:right;padding:4px 5px">2,192,000</td>
+              <td style="text-align:right;padding:4px 5px">271,200</td><td style="text-align:right;padding:4px 5px">271,200</td>
+              <td style="text-align:right;padding:4px 5px">1,200,000</td><td style="text-align:right;padding:4px 5px">1,200,000</td>
+              <td style="text-align:right;padding:4px 5px">1,172,000</td><td style="text-align:right;padding:4px 5px">1,172,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="mock-start-btn" style="width:auto;padding:9px 22px;font-size:.8rem" onclick="checkSeisan()">答え合わせ</button>
+        <button class="reset-btn" onclick="resetSeisan()">リセット</button>
+      </div>
+      <div id="sp-score" style="display:none;margin-top:10px;font-size:.9rem;font-weight:700;padding:10px 14px;border-radius:5px;background:var(--pale)"></div>
+      <div id="sp-exp" class="exam-note" style="display:none;margin-top:10px;line-height:2">
+        <div style="font-weight:700;color:var(--gold);font-size:.72rem;letter-spacing:.08em;margin-bottom:6px">【解説】</div>
+        <strong>① 売上原価の算定（繰越商品・仕入）</strong><br>
+        　(借)仕入 56,000 ／ (貸)繰越商品 56,000　←期首商品を仕入へ振替<br>
+        　(借)繰越商品 64,000 ／ (貸)仕入 64,000　←期末商品を繰越商品へ振替<br>
+        　→ 繰越商品B/S借 ＝ <strong style="color:var(--accent2)">64,000円</strong>　仕入P/L借 ＝ 700,000＋56,000−64,000 ＝ <strong style="color:var(--accent2)">692,000円</strong><br><br>
+        <strong>② 貸倒引当金の設定（差額補充法）</strong><br>
+        　設定額：320,000 × 2% ＝ 6,400円　既存：3,200円<br>
+        　追加繰入：6,400 − 3,200 ＝ <strong style="color:var(--accent2)">3,200円</strong>（決算整理貸方・P/L借方）<br>
+        　引当金残高：3,200 ＋ 3,200 ＝ <strong style="color:var(--accent2)">6,400円</strong>（B/S貸方）<br><br>
+        <strong>③ 減価償却費の計上（備品）</strong><br>
+        　600,000 ÷ 5年 ＝ <strong style="color:var(--accent2)">120,000円</strong>（決算整理借方・P/L借方）<br>
+        　累計額：240,000 ＋ 120,000 ＝ <strong style="color:var(--accent2)">360,000円</strong>（B/S貸方）<br><br>
+        <strong>④ 前払費用の計上（支払保険料）</strong><br>
+        　前払費用：<strong style="color:var(--accent2)">8,000円</strong>（決算整理借方・B/S借方）<br>
+        　支払保険料：24,000 − 8,000 ＝ <strong style="color:var(--accent2)">16,000円</strong>（P/L借方）<br><br>
+        <strong>⑤ 未払費用の計上（給料）</strong><br>
+        　未払費用：<strong style="color:var(--accent2)">20,000円</strong>（決算整理貸方・B/S貸方）<br>
+        　給料：240,000 ＋ 20,000 ＝ <strong style="color:var(--accent2)">260,000円</strong>（P/L借方）<br><br>
+        <strong>⑥ 当期純利益の計算</strong><br>
+        　収益：1,200,000　費用：692,000＋260,000＋72,000＋16,000＋120,000＋3,200 ＝ 1,163,200<br>
+        　当期純利益 ＝ <strong style="color:var(--accent2)">36,800円</strong>（P/L借方・B/S貸方）
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- REFERENCE -->
@@ -849,7 +1176,21 @@
   <div class="rn-list">
 
     <div class="rn-entry rn-add">
-      <div class="rn-head"><span class="rn-no">#25</span><span class="rn-date">2026-05-09</span><span class="rn-badge rn-add-badge">追加</span><span class="rn-new-label">最新</span></div>
+      <div class="rn-head"><span class="rn-no">#27</span><span class="rn-date">2026-05-12</span><span class="rn-badge rn-add-badge">追加</span><span class="rn-new-label">最新</span></div>
+      <div class="rn-title">弱点問題の集中練習モードを追加・問題数バランスを是正</div>
+      <div class="rn-desc">成績タブに「弱点問題」カードを追加。間違えた問題をまとめてクイズ形式で再練習できる。また、試験での出題比重が高い決算整理（24問→32問）・その他（24問→34問）の問題を増強し合計138問に。</div>
+      <div class="rn-tags"><span class="rn-tag">成績</span><span class="rn-tag">練習問題</span></div>
+    </div>
+
+    <div class="rn-entry rn-add">
+      <div class="rn-head"><span class="rn-no">#26</span><span class="rn-date">2026-05-12</span><span class="rn-badge rn-add-badge">追加</span></div>
+      <div class="rn-title">第3問対策に総合練習問題（決算整理後残高試算表・精算表）を追加</div>
+      <div class="rn-desc">第3問対策タブに2種類の総合練習問題を追加。①決算整理後残高試算表（10問穴埋め・5つの決算整理事項から作成）②精算表（22問穴埋め・4欄式・残高試算表から損益計算書・貸借対照表まで一貫作成）。答え合わせ・詳細解説・リセット機能付き。</div>
+      <div class="rn-tags"><span class="rn-tag">第3問対策</span><span class="rn-tag">精算表</span></div>
+    </div>
+
+    <div class="rn-entry rn-add">
+      <div class="rn-head"><span class="rn-no">#25</span><span class="rn-date">2026-05-09</span><span class="rn-badge rn-add-badge">追加</span></div>
       <div class="rn-title">第3問対策に練習問題（全6問）を追加</div>
       <div class="rn-desc">決算整理後の金額を自分で計算するインタラクティブ練習を追加。売上原価・減価償却・貸倒引当金・経過勘定・複合問題・法人税等まで段階的に学べる全6問。答え合わせ・解説表示・リセット機能付き。</div>
       <div class="rn-tags"><span class="rn-tag">第3問対策</span></div>

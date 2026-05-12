@@ -152,6 +152,20 @@ async function renderStats(){
     </div>
   </div>`;
 
+  // 弱点問題セクション
+  const weakTotal = Object.values(missedQs).reduce((a,v)=>a+v.length,0);
+  if(weakTotal>0){
+    html+=`<div class="genre-card" style="border-color:var(--wg)">
+      <div class="genre-top">
+        <div class="genre-name" style="color:var(--wg)">❌ 弱点問題</div>
+        <div class="genre-rate g-lo">${weakTotal}問</div>
+      </div>
+      <div class="genre-sub" style="margin-bottom:10px">間違えた問題を集中的に練習できます</div>
+      <div class="stat-lesson-btns">
+        <button class="stat-lesson-btn" style="background:var(--wl);color:var(--wg);border-color:var(--wg)" onclick="loadWeakQs()">🎯 苦手問題を集中練習する（${weakTotal}問）</button>
+      </div>
+    </div>`;
+  }
   el.innerHTML=html;
 }
 
@@ -219,6 +233,26 @@ function loadQs(){
   curQs=shuffled.slice(0,Math.min(QUIZ_COUNT,shuffled.length)).map(shuffleQ);
   idx=0;correct=0;wrong=0;answered=false;
   document.getElementById('resultScreen').classList.add('hidden');
+  hideBanner();updateProgress();renderQ();
+}
+
+function loadWeakQs(){
+  const pool=[];
+  Object.entries(missedQs).forEach(([lk,items])=>{
+    const cat=rawQs.find(q=>q.lk===lk)?.cat||'その他';
+    items.forEach(m=>{
+      const correct=m.opts[m.ans];
+      const rawOpts=[correct,...m.opts.filter((_,i)=>i!==m.ans)];
+      pool.push(shuffleQ({cat,lk,q:m.q,opts:rawOpts,exp:m.exp}));
+    });
+  });
+  if(pool.length===0)return;
+  pool.sort(()=>Math.random()-.5);
+  curQs=pool;
+  idx=0;correct=0;wrong=0;answered=false;
+  document.getElementById('resultScreen').classList.add('hidden');
+  const quizTabBtn=document.querySelector(".tab[onclick*=\"showTab('quiz'\"]");
+  showTab('quiz',quizTabBtn);
   hideBanner();updateProgress();renderQ();
 }
 
@@ -1611,6 +1645,79 @@ function showQ3Summary(){
       <button class="mock-start-btn" style="width:auto;padding:10px 28px;margin-top:16px" onclick="initQ3Practice()">もう一度最初から</button>
     </div>
   `;
+}
+
+// ===== 精算表 採点 =====
+function checkSeisan(){
+  const answers = [
+    ['sp1',64000],['sp2',56000],['sp3',64000],
+    ['sp4',8000], ['sp5',8000],
+    ['sp6',3200], ['sp7',6400],
+    ['sp8',120000],['sp9',360000],
+    ['sp10',20000],['sp11',20000],
+    ['sp12',692000],
+    ['sp13',20000],['sp14',260000],
+    ['sp15',8000], ['sp16',16000],
+    ['sp17',120000],['sp18',120000],
+    ['sp19',3200], ['sp20',3200],
+    ['sp21',36800],['sp22',36800]
+  ];
+  let correct=0;
+  answers.forEach(([id,ans])=>{
+    const inp=document.getElementById(id);
+    if(!inp)return;
+    inp.classList.remove('g-ok','g-ng');
+    if((parseInt(inp.value)||0)===ans){inp.classList.add('g-ok');correct++;}
+    else{inp.classList.add('g-ng');}
+  });
+  const sc=document.getElementById('sp-score');
+  sc.style.display='block';
+  const pct=Math.round(correct/answers.length*100);
+  sc.style.color=correct===answers.length?'var(--cg)':correct>=16?'var(--gold)':'var(--wg)';
+  sc.innerHTML=`${correct===answers.length?'✅':correct>=16?'🔶':'❌'} <strong>${correct} / ${answers.length} 問正解</strong>（${pct}%）${correct===answers.length?'　完璧です！':'　解説を確認しましょう。'}`;
+  document.getElementById('sp-exp').style.display='block';
+}
+function resetSeisan(){
+  for(let i=1;i<=22;i++){
+    const inp=document.getElementById('sp'+i);
+    if(!inp)continue;
+    inp.value='';inp.classList.remove('g-ok','g-ng');
+  }
+  document.getElementById('sp-score').style.display='none';
+  document.getElementById('sp-exp').style.display='none';
+}
+
+// ===== 決算整理後残高試算表 採点 =====
+function checkQ3Practice(){
+  const answers = [
+    ['q3p1', 80000], ['q3p2', 12000], ['q3p3', 8000], ['q3p4', 320000],
+    ['q3p5', 20000], ['q3p6', 480000], ['q3p7', 260000], ['q3p8', 12000],
+    ['q3p9', 120000], ['q3p10', 4000]
+  ];
+  let correct = 0;
+  answers.forEach(([id, ans]) => {
+    const inp = document.getElementById(id);
+    if (!inp) return;
+    inp.classList.remove('g-ok', 'g-ng');
+    if ((parseInt(inp.value) || 0) === ans) { inp.classList.add('g-ok'); correct++; }
+    else { inp.classList.add('g-ng'); }
+  });
+  const scoreEl = document.getElementById('q3p-score');
+  scoreEl.style.display = 'block';
+  const pct = Math.round(correct / answers.length * 100);
+  scoreEl.style.color = correct === answers.length ? 'var(--cg)' : correct >= 7 ? 'var(--gold)' : 'var(--wg)';
+  scoreEl.innerHTML = `${correct === answers.length ? '✅' : correct >= 7 ? '🔶' : '❌'} <strong>${correct} / ${answers.length} 問正解</strong>（${pct}%）${correct === answers.length ? '　完璧です！' : '　解説を確認しましょう。'}`;
+  document.getElementById('q3p-exp').style.display = 'block';
+}
+function resetQ3Practice(){
+  ['q3p1','q3p2','q3p3','q3p4','q3p5','q3p6','q3p7','q3p8','q3p9','q3p10'].forEach(id => {
+    const inp = document.getElementById(id);
+    if (!inp) return;
+    inp.value = '';
+    inp.classList.remove('g-ok','g-ng');
+  });
+  document.getElementById('q3p-score').style.display = 'none';
+  document.getElementById('q3p-exp').style.display = 'none';
 }
 
 init();
