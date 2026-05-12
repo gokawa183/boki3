@@ -37,6 +37,8 @@ git push origin main
 
 ローカルの `boki3.html`（旧単一ファイル）は参照・バックアップ用として残してある。
 
+> ⚠️ **`boki3.html` は絶対に編集しない。** 編集対象は `index.html` / `style.css` / `data.js` / `app.js` の4ファイルのみ。
+
 ## データ構造（data.js）
 
 ### `rawQs`（練習問題 150問）
